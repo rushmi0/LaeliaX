@@ -30,8 +30,7 @@ object Send {
 
 fun main() {
 
-
-
+    
     val privateKey = BigInteger("b8f28a772fccbf9b4f58a4f027e07dc2e35e7cd80529975e292ea34f84c4580c", 16)
     println("Private Key: \n> ${privateKey}")
 
@@ -49,8 +48,8 @@ fun main() {
     // * UTxO Input:
     val txID = "1854c5b5af18d06ec4db1b882ade607ff01fdf367ab3c3b38cea40a0f91b615d".FlipByteOrder()
     val vout = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(0).array().ByteArrayToHex()
-    val contractSize = ScriptIN1.HexToByteArray().size.DeciToHex()
-    val contract =  ScriptIN1
+    val scriptLength = ScriptIN1.HexToByteArray().size.DeciToHex()
+    val script =  ScriptIN1
     val Sequence = "fdffffff"
 
     // * count OUT
@@ -68,8 +67,8 @@ fun main() {
         inputCount,
         txID,
         vout,
-        contractSize,
-        contract,
+        scriptLength,
+        script,
         Sequence,
         outCount,
         output_1,
