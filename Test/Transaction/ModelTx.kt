@@ -4,33 +4,33 @@ package Laeliax.Transaction
 import Laeliax.SecureKey.EllipticCurve
 import Laeliax.SecureKey.EllipticCurve.ECDSA.Sign
 import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
-import Laeliax.Transaction.Send.toSegWit
+
 import Laeliax.util.Bech32
 import Laeliax.util.Hashing.doubleSHA256
 import Laeliax.util.ShiftTo.ByteArrayToHex
 import Laeliax.util.ShiftTo.DeciToHex
 import Laeliax.util.ShiftTo.FlipByteOrder
 import Laeliax.util.ShiftTo.HexToByteArray
+
 import java.math.BigInteger
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-object Send {
-    // * bc1qvtus7nqcuj7n8mwj446zpqjyr8l49e2x76jxpn
-    fun toSegWit(amountSAT: Long, address: String): String {
-        val amountSAT = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amountSAT).array().ByteArrayToHex()
-        val data = Bech32.bech32ToSegwit(address)[2] as ByteArray
-        val lockSize = data.size.DeciToHex()
-        val lockingScript = "00${lockSize}${data.ByteArrayToHex()}"
-        val fieldSizes = "${lockingScript}".HexToByteArray().size.DeciToHex()
-        return "${amountSAT}${fieldSizes}${lockingScript}"
-    }
+
+// * bc1qvtus7nqcuj7n8mwj446zpqjyr8l49e2x76jxpn
+fun toSegWit(amountSAT: Long, address: String): String {
+    val amountSAT = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amountSAT).array().ByteArrayToHex()
+    val keyHash = Bech32.bech32ToSegwit(address)[2] as ByteArray
+    val keyHashLength = keyHash.size.DeciToHex()
+    val script = "00${keyHashLength}${keyHash.ByteArrayToHex()}"
+    val fieldSizes = "${script}".HexToByteArray().size.DeciToHex()
+    return "${amountSAT}${fieldSizes}${script}"
 }
 
 
 fun main() {
 
-    
+
     val privateKey = BigInteger("b8f28a772fccbf9b4f58a4f027e07dc2e35e7cd80529975e292ea34f84c4580c", 16)
     println("Private Key: \n> ${privateKey}")
 
@@ -56,7 +56,7 @@ fun main() {
     val outCount: String = byteArrayOf(2).ByteArrayToHex()
 
     // * UTxO Output
-    val output_1 = toSegWit(6000, "bc1qdt43shtcjpug6jlza5yhhmnkd6yks4aarac3yk")
+    val output_1 = toSegWit(6_000_000, "bc1qdt43shtcjpug6jlza5yhhmnkd6yks4aarac3yk")
     val output_2 = toSegWit(500_000_000_000, "bc1qrrc5jmelkjtmfjjw5tt8s07nmjhvp82ypnspvu")
 
     val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(766910).array().ByteArrayToHex()

@@ -58,7 +58,6 @@ fun main() {
                 + lockTime
             )
     println(rawTx.ByteArrayToHex())
-    var raw = "01000000014fd41d549a05ecb69351b91c4d4095984f0bb458e75046a75f7daf91c0fec9730000000000ffffffff01d0fb01000000000017a91487b16bf5c5e43bf1dbd69440556f4f5a1430b5fd8700000000"
 
     val timeLockScript = "03beb30bb17521027de11310f7c996a2d1021276c11759ebb6f26d229dfd0bbc93b7f72fd36e3b8cac"
     val SizeScript = timeLockScript.HexToByteArray().size.DeciToHex()

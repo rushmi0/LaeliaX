@@ -1,5 +1,6 @@
 package Laeliax.MiniScript
 
+import Laeliax.MiniScript.Validator.littleEndianToDecimal
 import Laeliax.MiniScript.Validator.readeScript
 import Laeliax.util.Hashing.doubleSHA256
 import Laeliax.util.ShiftTo.BinaryToByteArray
@@ -78,6 +79,22 @@ object Validator {
         }
     }
 
+
+    fun littleEndianToDecimal(bytes: ByteArray): Long {
+        var result: Long = 0
+        var multiplier: Long = 1
+
+        for (i in 0 until bytes.size) {
+            val byteValue: Long = bytes[i].toLong() and 0xFF
+            result += byteValue * multiplier
+            multiplier *= 256
+        }
+
+        return result
+    }
+
+
+
 }
 
 
@@ -86,4 +103,8 @@ fun main() {
 
     val decodedScript = readeScript(scriptHex)
     println(decodedScript)
+
+    val littleEndianValue = "abb915".HexToByteArray()
+    val decimalValue = littleEndianToDecimal(littleEndianValue)
+    println(decimalValue)
 }
