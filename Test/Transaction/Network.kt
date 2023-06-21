@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 
-object Networks {
+object NETWORKS {
 
     val VERSION: Map<Int, Any> = mapOf(
         1 to ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(1).array().ByteArrayToHex(),
@@ -55,7 +55,7 @@ object Networks {
 
 fun main() {
 
-    val value = Networks.MAIN["xprv"].toString().HexToByteArray()
+    val value = NETWORKS.MAIN["xprv"].toString().HexToByteArray()
     println(value)
 
 }

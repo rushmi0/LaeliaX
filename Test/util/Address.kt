@@ -15,30 +15,28 @@ import Laeliax.util.Address.verify.isP2PKH
 import Laeliax.util.Address.verify.isP2WPKH
 import Laeliax.util.Address.verify.isP2WSH
 
-import Laeliax.MiniScript.OP_
-import Laeliax.Transaction.Networks
-import Laeliax.util.Address.getP2WSH
+import Laeliax.Transaction.NETWORKS
 import Laeliax.util.Address.verify.getChecksum
 
 
 object Address {
 
-    private val CHAIN = Networks.MAIN
+    private val CHAIN = NETWORKS.MAIN
 
 
-    fun P2WSH(network: String, data: String): String {
+    private fun P2WSH(network: String, data: String): String {
         val script = data.SHA256()
         val scriptHash = script.HexToByteArray()
         return Bech32.segwitToBech32("bc", 0, scriptHash)
     }
 
-    fun P2WPKH(network: String, data: String): String {
+    private fun P2WPKH(network: String, data: String): String {
         val pubkey = data.SHA256()
         val pubkeyHas = pubkey.RIPEMD160().HexToByteArray()
         return Bech32.segwitToBech32("bc", 0, pubkeyHas)
     }
 
-    fun P2PKH(network: String, data: String): String {
+    private fun P2PKH(network: String, data: String): String {
         val PREFIX_NESTED: String = CHAIN["p2pkh"].toString()
         val pubkey: String = data.SHA256()
         val pubkeyHas: String = pubkey.RIPEMD160()
@@ -50,7 +48,7 @@ object Address {
         return combine.encodeBase58()
     }
 
-    fun NestedSegWit(network: String, data: String): String {
+    private fun NestedSegWit(network: String, data: String): String {
         val dataHash256: String = data.SHA256()
         val size = dataHash256.HexToByteArray().size.toString(16)
 
@@ -58,7 +56,7 @@ object Address {
         return redeemScript.getP2SH("main")
     }
 
-    fun P2SH(network: String, data: String): String {
+    private fun P2SH(network: String, data: String): String {
         val redeemScript: String = data.SHA256()
         val redeemScriptHas: String = redeemScript.RIPEMD160()
 
