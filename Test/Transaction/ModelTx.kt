@@ -30,7 +30,6 @@ fun toSegWit(amountSAT: Long, address: String): String {
 
 fun main() {
 
-
     val privateKey = BigInteger("b8f28a772fccbf9b4f58a4f027e07dc2e35e7cd80529975e292ea34f84c4580c", 16)
     println("Private Key: \n> ${privateKey}")
 
@@ -40,7 +39,7 @@ fun main() {
     val scriptTimeLock = "03abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
     val ScriptIN1 = scriptTimeLock
 
-    val version = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(1).array().ByteArrayToHex()
+    val version = Networks.VERSION[1].toString()
 
     // * count IN
     val inputCount: String = byteArrayOf(1).ByteArrayToHex()

@@ -1,6 +1,6 @@
 package Laeliax.MiniScript
 
-import Laeliax.MiniScript.Validator.littleEndianToDecimal
+
 import Laeliax.MiniScript.Validator.readeScript
 import Laeliax.util.Hashing.doubleSHA256
 import Laeliax.util.ShiftTo.BinaryToByteArray
@@ -8,14 +8,32 @@ import Laeliax.util.ShiftTo.ByteArrayToHex
 import Laeliax.util.ShiftTo.FlipByteOrder
 import Laeliax.util.ShiftTo.HexToBinary
 import Laeliax.util.ShiftTo.HexToByteArray
+import Laeliax.util.ShiftTo.littleEndianToDeci
 
 object Validator {
 
     fun String.isMultisig(): Boolean {
+
         val contractBytes = this.HexToByteArray()
 
-        // ตัวนำเนินการ OP_2 - OP_16
-        val operRator = listOf(82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96)
+        // * ตัวนำเนินการ OP_CODE
+        val operRator = listOf(
+            82, // OP_2
+            83, // OP_3
+            84, // OP_4
+            85, // OP_5
+            86, // OP_6
+            87, // OP_7
+            88, // OP_8
+            89, // OP_9
+            90, // OP_10
+            91, // OP_11
+            92, // OP_12
+            93, // OP_13
+            94, // OP_14
+            95, // OP_15
+            96  // OP_16
+        )
 
         val M = contractBytes[0].toInt()
         val N: Int = contractBytes[contractBytes.size - 2].toInt()
@@ -80,20 +98,6 @@ object Validator {
     }
 
 
-    fun littleEndianToDecimal(bytes: ByteArray): Long {
-        var result: Long = 0
-        var multiplier: Long = 1
-
-        for (i in 0 until bytes.size) {
-            val byteValue: Long = bytes[i].toLong() and 0xFF
-            result += byteValue * multiplier
-            multiplier *= 256
-        }
-
-        return result
-    }
-
-
 
 }
 
@@ -104,7 +108,7 @@ fun main() {
     val decodedScript = readeScript(scriptHex)
     println(decodedScript)
 
-    val littleEndianValue = "abb915".HexToByteArray()
-    val decimalValue = littleEndianToDecimal(littleEndianValue)
+    val littleEndianValue = "abb915"
+    val decimalValue = littleEndianValue.littleEndianToDeci()
     println(decimalValue)
 }

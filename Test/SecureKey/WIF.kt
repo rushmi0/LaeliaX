@@ -3,8 +3,8 @@ package Laeliax.SecureKey
 
 import Laeliax.SecureKey.WIF.extractWIF
 import Laeliax.SecureKey.WIF.toWIF
+import Laeliax.util.Address.verify.getChecksum
 
-import Laeliax.util.Hashing.doubleSHA256
 import Laeliax.util.ShiftTo.ByteArrayToHex
 import Laeliax.util.ShiftTo.HexToByteArray
 import Laeliax.util.ShiftTo.decodeBase58
@@ -28,18 +28,20 @@ object WIF {
 
         val privateKeyBytes = privateKeyHex.HexToByteArray()
 
-        var prefix: ByteArray
-        if (NETWORK == "main") {
-            prefix = byteArrayOf(MAINNET)
-        } else if (NETWORK == "test") {
-            prefix = byteArrayOf(TESTNET)
-        } else {
-            return "inValid"
+        val prefix: ByteArray = when (NETWORK) {
+            "main" -> {
+                byteArrayOf(MAINNET)
+            }
+            "test" -> {
+                byteArrayOf(TESTNET)
+            }
+            else -> {
+                return "inValid"
+            }
         }
 
         val extendedKey = prefix + privateKeyBytes
-        val sha256 = extendedKey.doubleSHA256()
-        val checksum = sha256.copyOfRange(0, 4)
+        val checksum = extendedKey.getChecksum()
 
         val wifBytes = extendedKey + checksum
         return wifBytes.ByteArrayToHex().encodeBase58()
@@ -58,20 +60,22 @@ object WIF {
 
         val privateKeyBytes = privateKeyHex.HexToByteArray()
 
-        var prefix: ByteArray
-        if (NETWORK == "main") {
-            prefix = byteArrayOf(MAINNET)
-        } else if (NETWORK == "test") {
-            prefix = byteArrayOf(TESTNET)
-        } else {
-            return "inValid"
+        val prefix: ByteArray = when (NETWORK) {
+            "main" -> {
+                byteArrayOf(MAINNET)
+            }
+            "test" -> {
+                byteArrayOf(TESTNET)
+            }
+            else -> {
+                return "inValid"
+            }
         }
 
         val compressed = byteArrayOf(0x01.toByte())
 
         val extendedKey = prefix + privateKeyBytes + compressed
-        val sha256 = extendedKey.doubleSHA256()
-        val checksum = sha256.copyOfRange(0, 4)
+        val checksum = extendedKey.getChecksum()
 
         val wifBytes = extendedKey + checksum
         return wifBytes.ByteArrayToHex().encodeBase58()

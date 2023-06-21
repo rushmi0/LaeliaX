@@ -10,7 +10,6 @@ object ShiftTo {
     private val hexDigits: String = "0123456789abcdef"
 
 
-
     fun String.HexToBinary(): String {
         val stringBuilder = StringBuilder(length * 4)
 
@@ -37,6 +36,8 @@ object ShiftTo {
         return stringBuilder.toString()
     }
 
+
+
     fun String.BinaryToByteArray(): ByteArray {
         return this.chunked(8).map { it.toInt(2).toByte() }.toByteArray()
     }
@@ -48,6 +49,7 @@ object ShiftTo {
     fun ByteArray.ByteArrayToHex(): String {
         return joinToString("") { byte -> byte.toUByte().toString(16).padStart(2, '0') }
     }
+
 
 
     fun BigInteger.DeciToHex(): String {
@@ -67,6 +69,7 @@ object ShiftTo {
         return result.toString()
     }
 
+
     fun Int.DeciToByte(): ByteArray {
         val bytes = ByteArray(4)
         bytes[0] = (this shr 24 and 0xFF).toByte()
@@ -75,6 +78,7 @@ object ShiftTo {
         bytes[3] = (this and 0xFF).toByte()
         return bytes
     }
+
 
     fun Long.DeciToByte(): ByteArray {
         val bytes = ByteArray(8)
@@ -88,7 +92,6 @@ object ShiftTo {
         bytes[7] = (this and 0xFF).toByte()
         return bytes
     }
-
 
 
     fun Int.DeciToHex(): String {
@@ -124,28 +127,16 @@ object ShiftTo {
         return integers
     }
 
+
     fun Int.DeciToHexByte(): String {
         return "%02X".format(this)
     }
 
-    fun ByteArray.ByteArrayToHex(format: String = ""): String {
-        val hexChars = CharArray(this.size * 2)
-        for (i in this.indices) {
-            val v = this[i].toInt() and 0xff
-            hexChars[i * 2] = HEX_ARRAY[v ushr 4]
-            hexChars[i * 2 + 1] = HEX_ARRAY[v and 0x0f]
-        }
-        return if (format.isNotEmpty()) {
-            format.replace(" ", "").replace("X", "%02X")
-                .format(*this.map { it.toInt() and 0xFF }.toTypedArray())
-        } else {
-            String(hexChars)
-        }
-    }
 
     fun String.FlipByteOrder(): String {
         return this.chunked(2).reversed().joinToString("")
     }
+
 
     fun String.HexToByteArray(): ByteArray {
         val hex = this.replace("", "")
@@ -156,6 +147,24 @@ object ShiftTo {
         return byteArray
     }
 
+
+    fun String.littleEndianToDeci(): Long {
+        var result: Long = 0
+        var multiplier: Long = 1
+
+        val bytes = this.HexToByteArray()
+
+        for (i in 0 until bytes.size) {
+            val byteValue: Long = bytes[i].toLong() and 0xFF
+            result += byteValue * multiplier
+            multiplier *= 256
+        }
+
+        return result
+    }
+
+
+
     fun String.decodeBase58(): String {
         return Base58.decode(this).ByteArrayToHex()
     }
@@ -163,7 +172,6 @@ object ShiftTo {
     fun String.encodeBase58(): String {
         return Base58.encode(this.HexToByteArray())
     }
-
 
     fun String.encodeBase64(): String {
         val byteArray = this.toByteArray()

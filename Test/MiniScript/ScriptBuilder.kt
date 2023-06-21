@@ -7,11 +7,11 @@ import Laeliax.util.ShiftTo.ByteArrayToHex
 import Laeliax.util.ShiftTo.ByteToHex
 import Laeliax.util.ShiftTo.HexToByteArray
 
-import Laeliax.util.Address.P2SH
-import Laeliax.util.Address.P2WSH
+import Laeliax.util.Address.getP2WSH
 import Laeliax.util.Address.segwitP2SH
 import Laeliax.util.ShiftTo.DeciToHexByte
 import Laeliax.MiniScript.Validator.isMultisig
+import Laeliax.util.Address.getP2SH
 
 class ScriptBuilder {
 
@@ -64,7 +64,7 @@ class ScriptBuilder {
         val sizeTime: ByteArray = byteArrayOf(nLockTime.size.toByte())
         val Stack: StringBuilder = StringBuilder()
 
-        val group = dataHex.substring(0, 1)//.HexToByteArray().copyOfRange(0, 1)
+        val group = dataHex.substring(0, 2)
         if (group in setOf("02", "03")) {
             val PublicKey: ByteArray = dataHex.HexToByteArray()
             for (element: ByteArray in arrayOf(
@@ -168,20 +168,20 @@ fun main() {
 
     val scriptMultiSig: String = Script.multiSig(M, keys)
     println("MultiSig Script: $scriptMultiSig")
-    println("MultiSig P2WSH: ${scriptMultiSig.P2WSH()}")
-    println("MultiSig P2SH: ${scriptMultiSig.P2SH()}")
-    println("MultiSig Nested SegWit: ${scriptMultiSig.segwitP2SH()} \n")
+    println("MultiSig P2WSH: ${scriptMultiSig.getP2WSH("main")}")
+    println("MultiSig P2SH: ${scriptMultiSig.getP2SH("main")}")
+    println("MultiSig Nested SegWit: ${scriptMultiSig.segwitP2SH("main")} \n")
 
 
     // * TimeLock
     val blockNumber = 1423787
-    val dataHex = scriptMultiSig
-    //val dataHex = "02aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8db"
+    //val dataHex = scriptMultiSig
+    val dataHex = "02aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8db"
 
     val scriptTimeLock: String = Script.TimeLock(blockNumber, dataHex)
     println("TimeLock Script: $scriptTimeLock")
 
-    println("TimeLock P2WSH: ${scriptTimeLock.P2WSH()}")
-    println("TimeLock P2SH: ${scriptTimeLock.P2SH()}")
-    println("TimeLock Nested SegWit: ${scriptTimeLock.segwitP2SH()} \n")
+    println("TimeLock P2WSH: ${scriptTimeLock.getP2WSH("main")}")
+    println("TimeLock P2SH: ${scriptTimeLock.getP2SH("main")}")
+    println("TimeLock Nested SegWit: ${scriptTimeLock.segwitP2SH("main")} \n")
 }
