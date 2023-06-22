@@ -3,6 +3,7 @@ package Laeliax.SecureKey
 
 import Laeliax.SecureKey.WIF.extractWIF
 import Laeliax.SecureKey.WIF.toWIF
+import Laeliax.Transaction.NETWORKS
 import Laeliax.util.Address.verify.getChecksum
 
 import Laeliax.util.ShiftTo.ByteArrayToHex
@@ -13,10 +14,9 @@ import Laeliax.util.ShiftTo.encodeBase58
 
 object WIF {
 
-    val MAINNET = 0x80.toByte()
-    val TESTNET = 0Xef.toByte()
+    private val CHAIN = NETWORKS
 
-    fun WIF_U(NETWORK: String, privateKeyHex: String): String {
+    private fun privateKeyToWIF_U(network: String, privateKeyHex: String): String {
 
         /*
          *
@@ -28,12 +28,12 @@ object WIF {
 
         val privateKeyBytes = privateKeyHex.HexToByteArray()
 
-        val prefix: ByteArray = when (NETWORK) {
+        val prefix: ByteArray = when (network) {
             "main" -> {
-                byteArrayOf(MAINNET)
+                CHAIN.MAIN["wif"].toString().HexToByteArray()
             }
             "test" -> {
-                byteArrayOf(TESTNET)
+                CHAIN.TEST["wif"].toString().HexToByteArray()
             }
             else -> {
                 return "inValid"
@@ -48,7 +48,7 @@ object WIF {
     }
 
 
-    fun WIF_C(NETWORK: String, privateKeyHex: String): String {
+    private fun privateKeyToWIF_C(network: String, privateKeyHex: String): String {
 
         /*
          *
@@ -60,12 +60,12 @@ object WIF {
 
         val privateKeyBytes = privateKeyHex.HexToByteArray()
 
-        val prefix: ByteArray = when (NETWORK) {
+        val prefix: ByteArray = when (network) {
             "main" -> {
-                byteArrayOf(MAINNET)
+                CHAIN.MAIN["wif"].toString().HexToByteArray()
             }
             "test" -> {
-                byteArrayOf(TESTNET)
+                CHAIN.TEST["wif"].toString().HexToByteArray()
             }
             else -> {
                 return "inValid"
@@ -81,12 +81,13 @@ object WIF {
         return wifBytes.ByteArrayToHex().encodeBase58()
     }
 
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
     fun String.toWIF(network: String, option: Boolean): String {
         return if (option == true) {
-            WIF_C(network, this)
+            privateKeyToWIF_C(network, this)
         } else {
-            WIF_U(network, this)
+            privateKeyToWIF_U(network, this)
         }
     }
 

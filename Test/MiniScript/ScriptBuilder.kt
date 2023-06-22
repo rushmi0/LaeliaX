@@ -8,7 +8,7 @@ import Laeliax.util.ShiftTo.ByteToHex
 import Laeliax.util.ShiftTo.HexToByteArray
 
 import Laeliax.util.Address.getP2WSH
-import Laeliax.util.Address.segwitP2SH
+import Laeliax.util.Address.getSegWitP2SH
 import Laeliax.util.ShiftTo.DeciToHexByte
 import Laeliax.MiniScript.Validator.isMultisig
 import Laeliax.util.Address.getP2SH
@@ -47,7 +47,7 @@ class ScriptBuilder {
          *   [ < PUSHDATA, LITTLE ENDIAN > ]
          * OP_CHECKLOCKTIMEVERIFY
          * OP_DROP
-         *   [ < ขนาดของ Byte Public key พิกัด X >, < Public key > ]
+         *   [ < ขนาดของ Byte Public key >, < Public key > ]
          * OP_CHECKSIG
          * */
 
@@ -106,7 +106,7 @@ class ScriptBuilder {
         /*
          * องค์ประกอบ Script
          * OP_M
-         *   [ < ขนาดของ Byte Public key พิกัด X >, < Public key > ]
+         *   [ < ขนาดของ Byte Public key >, < Public key > ]
                     ......
                     ......
          * OP_N
@@ -121,7 +121,7 @@ class ScriptBuilder {
         for (pubkey in publicKeys) {
             val dataHex = pubkey.HexToByteArray()
             val pubkeyLength = dataHex.size
-            Stack.append(pubkeyLength.toString(16))
+            Stack.append(pubkeyLength.DeciToHexByte())
             Stack.append(pubkey)
         }
 
@@ -170,7 +170,7 @@ fun main() {
     println("MultiSig Script: $scriptMultiSig")
     println("MultiSig P2WSH: ${scriptMultiSig.getP2WSH("main")}")
     println("MultiSig P2SH: ${scriptMultiSig.getP2SH("main")}")
-    println("MultiSig Nested SegWit: ${scriptMultiSig.segwitP2SH("main")} \n")
+    println("MultiSig Nested SegWit: ${scriptMultiSig.getSegWitP2SH("main")} \n")
 
 
     // * TimeLock
@@ -183,5 +183,5 @@ fun main() {
 
     println("TimeLock P2WSH: ${scriptTimeLock.getP2WSH("main")}")
     println("TimeLock P2SH: ${scriptTimeLock.getP2SH("main")}")
-    println("TimeLock Nested SegWit: ${scriptTimeLock.segwitP2SH("main")} \n")
+    println("TimeLock Nested SegWit: ${scriptTimeLock.getSegWitP2SH("main")}")
 }

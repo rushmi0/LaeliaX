@@ -39,7 +39,7 @@ fun main() {
     val scriptTimeLock = "03abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
     val ScriptIN1 = scriptTimeLock
 
-    val version = Networks.VERSION[1].toString()
+    val version = NETWORKS.VERSION[1].toString()
 
     // * count IN
     val inputCount: String = byteArrayOf(1).ByteArrayToHex()
@@ -59,6 +59,10 @@ fun main() {
     val output_2 = toSegWit(500_000_000_000, "bc1qrrc5jmelkjtmfjjw5tt8s07nmjhvp82ypnspvu")
 
     val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(766910).array().ByteArrayToHex()
+
+
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
 
     // * Unsigned Transaction
     val components: List<String> = listOf(
@@ -83,6 +87,10 @@ fun main() {
 
     val unsignedTransaction = combinedTransaction.toString()
     println("\nUnsigned Transaction: \n> ${unsignedTransaction}\n")
+
+
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
 
     // * Sign Transaction
     val message = BigInteger(unsignedTransaction.HexToByteArray().doubleSHA256().ByteArrayToHex(), 16)
@@ -110,6 +118,10 @@ fun main() {
             RedeemLength +
             RedeemScript
     ).HexToByteArray().size.DeciToHex()
+
+
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
 
     // * signed Transaction
     val componentsNEW: List<String> = listOf(

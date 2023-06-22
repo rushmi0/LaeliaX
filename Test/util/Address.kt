@@ -2,7 +2,6 @@ package Laeliax.util
 
 
 import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.ByteToHex
 import Laeliax.util.ShiftTo.HexToByteArray
 import Laeliax.util.ShiftTo.encodeBase58
 import Laeliax.util.ShiftTo.decodeBase58
@@ -16,12 +15,15 @@ import Laeliax.util.Address.verify.isP2WPKH
 import Laeliax.util.Address.verify.isP2WSH
 
 import Laeliax.Transaction.NETWORKS
+import Laeliax.util.Address.getP2PKH
+import Laeliax.util.Address.getSegWitP2SH
 import Laeliax.util.Address.verify.getChecksum
+import Laeliax.util.ShiftTo.DeciToHex
 
 
 object Address {
 
-    private val CHAIN = NETWORKS.MAIN
+    private val CHAIN = NETWORKS
 
 
     private fun P2WSH(network: String, data: String): String {
@@ -37,34 +39,144 @@ object Address {
     }
 
     private fun P2PKH(network: String, data: String): String {
-        val PREFIX_NESTED: String = CHAIN["p2pkh"].toString()
-        val pubkey: String = data.SHA256()
-        val pubkeyHas: String = pubkey.RIPEMD160()
 
-        val components: String = PREFIX_NESTED + pubkeyHas
-        val checksum: ByteArray = components.HexToByteArray().getChecksum()
+        // * เมื่อตรวจสอบค่า network และสร้าง Locking Script ตาม network นั้น
+        return when (network) {
 
-        val combine: String = components + checksum.ByteArrayToHex()
-        return combine.encodeBase58()
-    }
+            // * ในกรณีที่ค่า network เป็น "main" หรือ "test"
+            "main",
+            "test" -> {
 
-    private fun NestedSegWit(network: String, data: String): String {
-        val dataHash256: String = data.SHA256()
-        val size = dataHash256.HexToByteArray().size.toString(16)
+                // * คำนวณค่าแฮช SHA256 ของข้อมูล
+                val dataHash256: String = data.SHA256()
 
-        val redeemScript: String = CHAIN["p2pkh"].toString() + size + dataHash256
-        return redeemScript.getP2SH("main")
+                // * คำนวณค่าแฮช RIPEMD160 ของแฮชข้อมูล
+                val scriptHash: String = dataHash256.RIPEMD160()
+
+                val prefix = when (network) {
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x00
+                    "main" -> CHAIN.MAIN["p2pkh"]
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "test" -> 0x6F
+                    "test" -> CHAIN.TEST["p2pkh"]
+
+                    // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+                    else -> throw IllegalArgumentException("Invalid network")
+                }.toString()
+
+                // * รวมสคริปต์และแฮชสคริปต์เข้าด้วยกัน
+                val components = prefix + scriptHash
+
+                // * คำนวณเช็คซัม
+                val checksum: ByteArray = components.HexToByteArray().getChecksum()
+
+                // * ประกอบสคริปต์ prefix และ dataHash256 เข้าด้วยกัน
+                val combine = components + checksum.ByteArrayToHex()
+
+                // * เข้ารหัสและคืนค่าเป็น Base58
+                combine.encodeBase58()
+            }
+
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            else -> throw IllegalArgumentException("Invalid network")
+        }
     }
 
     private fun P2SH(network: String, data: String): String {
-        val redeemScript: String = data.SHA256()
-        val redeemScriptHas: String = redeemScript.RIPEMD160()
 
-        val components: String = CHAIN["p2sh"].toString() + redeemScriptHas
-        val checksum: ByteArray = components.HexToByteArray().getChecksum()
+        // * เมื่อตรวจสอบค่า network และสร้าง Locking Script ตาม network นั้น
+        return when (network) {
 
-        val combine: String = components + checksum.ByteArrayToHex()
-        return combine.encodeBase58()
+            // * ในกรณีที่ค่า network เป็น "main" หรือ "test"
+            "main",
+            "test" -> {
+
+                // * คำนวณค่าแฮช SHA256 ของข้อมูล
+                val dataHash256: String = data.SHA256()
+
+                // * คำนวณค่าแฮช RIPEMD160 ของแฮชข้อมูล
+                val scriptHash: String = dataHash256.RIPEMD160()
+
+                val prefix = when (network) {
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x05
+                    "main" -> CHAIN.MAIN["p2sh"]
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "test" -> 0xC4
+                    "test" -> CHAIN.TEST["p2sh"]
+
+                    // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+                    else -> throw IllegalArgumentException("Invalid network")
+                }.toString()
+
+                // * รวมสคริปต์และแฮชสคริปต์เข้าด้วยกัน
+                val components = prefix + scriptHash
+
+                // * คำนวณเช็คซัม
+                val checksum: ByteArray = components.HexToByteArray().getChecksum()
+                
+                // * ประกอบสคริปต์ prefix และ dataHash256 เข้าด้วยกัน
+                val combine = components + checksum.ByteArrayToHex()
+
+                // * เข้ารหัสและคืนค่าเป็น Base58
+                combine.encodeBase58()
+            }
+
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            else -> throw IllegalArgumentException("Invalid network")
+        }
+    }
+
+    private fun NestedSegWit(network: String, data: String): String {
+
+        // * เมื่อตรวจสอบค่า network และสร้าง Locking Script ตาม network นั้น
+        return when (network) {
+
+            // * ในกรณีที่ค่า network เป็น "main" หรือ "test"
+            "main",
+            "test" -> {
+
+                val dataHash: String = if (data.substring(0, 2) in setOf("02", "03") && data.HexToByteArray().size == 33) {
+
+                    // * คำนวณค่าแฮช SHA256 ของข้อมูล -> คำนวณค่าแฮชต่อด้วย RIPEMD160
+                    data.SHA256().RIPEMD160()
+                } else {
+
+                    // * คำนวณค่าแฮช SHA256 ของข้อมูล
+                    data.SHA256()
+                }
+
+                /*
+                * คำนวณค่า size โดยแปลง dataHash256 ซึ่งเป็นเลขฐานสิบหกให้เป็น Bytes
+                * จากนั้นนับจำนวน Bytes ทั้งหมด เอาผมรวมนั้นนำไปแปลงจากเลขฐานสิบ เป็นเลขฐานสิบหก
+                */
+                val size: String = dataHash.HexToByteArray().size.DeciToHex()
+
+                // * เมื่อตรวจสอบค่า network อีกครั้ง
+                val prefix = when (network) {
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x00
+                    "main" -> CHAIN.MAIN["p2pkh"]
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "test" -> 0x6F
+                    "test" -> CHAIN.TEST["p2pkh"]
+
+                    // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+                    else -> throw IllegalArgumentException("Invalid network")
+
+                }.toString()
+
+                // * ประกอบ script โดยรวมค่า prefix, size, และ dataHash256 เข้าด้วยกัน
+                val combine = prefix + size + dataHash
+
+                // * ส่งค่าสคริปตไปห่อด้วย P2SH โดยเรียกใช้ getP2SH() -> P2SH( SegWit )
+                combine.getP2SH(network)
+            }
+            
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            else -> throw IllegalArgumentException("Invalid network")
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
@@ -85,7 +197,7 @@ object Address {
     }
 
     // Nested SegWit (P2SH-P2WPKH)
-    fun String.segwitP2SH(network: String): String {
+    fun String.getSegWitP2SH(network: String): String {
         return NestedSegWit(network, this)
     }
 
@@ -98,7 +210,7 @@ object Address {
 
     /*
     * ในส่วนนี้ ใช้สำหรับการตรวจสอบความถูกต้องของ Locking Script ต่าง ๆ
-    * */
+    */
     object verify {
 
         private fun findeChecksum(data: ByteArray): ByteArray {
@@ -162,9 +274,17 @@ object Address {
 
 fun main() {
 
+    // * สร้าง Locking Script รูปแบบต่าง ๆ
+    val isPublicKey = "02aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8db"
+    val lockP2PKH = isPublicKey.getP2PKH("main")
+    val lockNested = isPublicKey.getSegWitP2SH("main")
+    println(lockP2PKH)
+    println(lockNested)
 
-    val P2PKH = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"
-    val isValidP2PKH = P2PKH.isP2PKH()
+
+    // * ตรวจสอบ Locking Script รูปแบบต่าง ๆ
+    val checkP2PKH = "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2"
+    val isValidP2PKH = checkP2PKH.isP2PKH()
 
     if (isValidP2PKH) {
         println("The address is valid.")
@@ -173,8 +293,8 @@ fun main() {
     }
 
 
-    val P2WSH = "bc1qqsa8rpm5c4etmz394kltr07dtsp9dts3em8el8pljfwsu54747ys0t028e"
-    val isValidP2WSH = P2WSH.isP2WSH()
+    val checkP2WSH = "bc1qqsa8rpm5c4etmz394kltr07dtsp9dts3em8el8pljfwsu54747ys0t028e"
+    val isValidP2WSH = checkP2WSH.isP2WSH()
 
     if (isValidP2WSH) {
         println("The address is valid.")
@@ -183,8 +303,8 @@ fun main() {
     }
 
 
-    val P2WPKH = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
-    val isValidP2WPKH = P2WPKH.isP2WPKH()
+    val checkP2WPKH = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4"
+    val isValidP2WPKH = checkP2WPKH.isP2WPKH()
 
     if (isValidP2WPKH) {
         println("The address is valid.")

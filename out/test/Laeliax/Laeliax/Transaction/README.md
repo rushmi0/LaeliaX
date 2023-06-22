@@ -34,7 +34,7 @@ Output ของ UTxO หนึ่งเป็นการใช้จ่าย�
 
 <br/>
 
-![Group 100](https://github.com/rushmi0/Laeliax/assets/120770468/03b9ebfa-46ed-4e27-ad2d-01802f8e4a8c)
+![Group 100](https://github.com/rushmi0/Laeliax/assets/120770468/1f239976-cfad-405c-a77d-b3d368b75f91)
 
 <br/>
 
@@ -45,7 +45,7 @@ Output ของ UTxO หนึ่งเป็นการใช้จ่าย�
 
 <br/>
 
-![NUM 1](https://github.com/rushmi0/Laeliax/assets/120770468/09aa946d-8236-49af-b979-493f9e707755)
+![NUM 1](https://github.com/rushmi0/Laeliax/assets/120770468/b75902c6-fcae-4da3-ba58-337e774e1fb8)
 
 <br/>
 
@@ -54,7 +54,7 @@ Output ของ UTxO หนึ่งเป็นการใช้จ่าย�
 
 <br/>
 
-![NUM 3](https://github.com/rushmi0/Laeliax/assets/120770468/b87215c3-b4f2-4427-b906-e315a1f51b87)
+![NUM 3](https://github.com/rushmi0/Laeliax/assets/120770468/58cff0e0-46bc-4c6f-bd8c-575691659044)
 
 <br/>
 
@@ -63,7 +63,7 @@ Output ของ UTxO หนึ่งเป็นการใช้จ่าย�
 
 <br/>
 
-![MIX TX](https://github.com/rushmi0/Laeliax/assets/120770468/dbf91b7c-0d95-45fe-93f0-4cb428563962)
+![MIX TX](https://github.com/rushmi0/Laeliax/assets/120770468/08ac33ce-d9db-465d-8c33-88212859f86a)
 
 <br/>
 
@@ -85,18 +85,14 @@ UTxO จะมี Input เท่าไหร่ก็ได้ และมี 
 <br/>
 
 
-![UTxO Unsign](https://github.com/rushmi0/Laeliax/assets/120770468/da8572ca-c3d1-47c1-9a9e-1a96ef0b0299)
-
+![UTxO Unsign](https://github.com/rushmi0/Laeliax/assets/120770468/128a9ad9-9160-4a58-b976-76cfff2513f5)
 
 ### ธุรกรรมดิบ ไม่มีลายเซ็น
 ```txt
 0100000001cb1a50fbd2437ac064bd7306984d5fe2154c929e75b1ca0ea25261ceb13950c9000000002903abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff0200c00b5a16000000160014342329383239d2f100a425ecf5112142e85ad10e0088526a740000001976a914977ae6e32349b99b72196cb62b5ef37329ed81b488acabb91500
 ```
 
-
-
-![UTxO Sign](https://github.com/rushmi0/Laeliax/assets/120770468/24d352f4-c140-42dc-8474-75899ba9e271)
-
+![UTxO Sign](https://github.com/rushmi0/Laeliax/assets/120770468/df2b78eb-8bc9-4761-b37b-1a7f136f999e)
 
 ### ธุรกรรมดิบ มีลายเซ็น
 ```txt
