@@ -1,6 +1,6 @@
 package Laeliax.util
 
-
+import Laeliax.util.ShiftTo.DeciToHex
 import Laeliax.util.ShiftTo.ByteArrayToHex
 import Laeliax.util.ShiftTo.HexToByteArray
 import Laeliax.util.ShiftTo.encodeBase58
@@ -13,12 +13,12 @@ import Laeliax.util.Hashing.doubleSHA256
 import Laeliax.util.Address.verify.isP2PKH
 import Laeliax.util.Address.verify.isP2WPKH
 import Laeliax.util.Address.verify.isP2WSH
+import Laeliax.util.Address.verify.getChecksum
 
-import Laeliax.Transaction.NETWORKS
 import Laeliax.util.Address.getP2PKH
 import Laeliax.util.Address.getSegWitP2SH
-import Laeliax.util.Address.verify.getChecksum
-import Laeliax.util.ShiftTo.DeciToHex
+
+import Laeliax.Transaction.NETWORKS
 
 
 object Address {

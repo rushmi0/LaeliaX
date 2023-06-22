@@ -43,7 +43,8 @@ class ScriptBuilder {
          *   └── PUSHDATA มาจากขนาด 4 bytes จาก [C1, B8, BE, 05] = 04 หรือ 4 byte
          *          └── PUSHDATA = [04]
          *
-         * องค์ประกอบ Script
+         *
+         * องค์ประกอบสคริปต์
          *   [ < PUSHDATA, LITTLE ENDIAN > ]
          * OP_CHECKLOCKTIMEVERIFY
          * OP_DROP
@@ -52,21 +53,27 @@ class ScriptBuilder {
          * */
 
 
-        // opPushData กำหนดจำนวนสูงสุด 8 byte เป็นมาตรฐาน ในการเก็บค่า LITTLE ENDIAN
+        // กำหนดค่าเริ่มต้นสำหรับ opPushData เพื่อเก็บค่า blockNumber ในรูปแบบ LITTLE ENDIAN 8 Bytes
         val opPushData: ByteBuffer = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putInt(blockNumber)
 
-        // ตรวจสอบค่าเพื่อกำกัดใน opPushData ที่มีค่า 0 byte ตั้งแต่ด้านท้ายสุดมา
+        // ตรวจสอบและกำหนดค่าให้กับ nLockTime โดยตัด byte 0x00 ที่อยู่ด้านท้ายออก
         var nLockTime: ByteArray = opPushData.array()
         while (nLockTime.isNotEmpty() && nLockTime.last() == 0x00.toByte()) {
             nLockTime = nLockTime.dropLast(1).toByteArray()
         }
 
+        // * เก็บขนาดของ nLockTime โดยนับผมรวมจำนวณ ByteArray ของ nLockTime
         val sizeTime: ByteArray = byteArrayOf(nLockTime.size.toByte())
+
+        // * Stack โง่ ๆ เก็บค่าต่าง ๆ
         val Stack: StringBuilder = StringBuilder()
 
+        // * ตรวจสอบว่าเป็น Public Key หรือไม่โดยดูจากหมายเลขกลุ่มและขนาดของมัน
         val group = dataHex.substring(0, 2)
-        if (group in setOf("02", "03")) {
+        if (group in setOf("02", "03", "04") && dataHex.length == 130 || dataHex.length == 66) {
             val PublicKey: ByteArray = dataHex.HexToByteArray()
+
+            // * กรณีเป็น Public key เรียงลำดับและเก็บค่าต่าง ๆ ใน Stack
             for (element: ByteArray in arrayOf(
                 sizeTime,
                 nLockTime,
@@ -80,6 +87,8 @@ class ScriptBuilder {
             }
         } else if (dataHex.isMultisig()) {
             val contract = dataHex.HexToByteArray()
+
+            // * กรณีเป็น MultiSig เรียงลำดับและเก็บค่าต่าง ๆ ใน Stack
             for (element: ByteArray in arrayOf(
                 sizeTime,
                 nLockTime,
@@ -91,7 +100,9 @@ class ScriptBuilder {
                 Stack.append(element.ByteArrayToHex())
             }
         } else {
-            println("inValid value")
+
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            throw IllegalArgumentException("Invalid network")
         }
 
         return Stack.toString()
@@ -104,7 +115,7 @@ class ScriptBuilder {
         require(M in 2..16) // ! จำนวน Public Keys ที่ระบุต้องอยู่ระหว่าง 1 ถึง 16
 
         /*
-         * องค์ประกอบ Script
+         * องค์ประกอบสคริปต์
          * OP_M
          *   [ < ขนาดของ Byte Public key >, < Public key > ]
                     ......
