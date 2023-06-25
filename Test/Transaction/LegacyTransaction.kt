@@ -184,13 +184,13 @@ fun main() {
         0
     )*/
 
-    /*tx.addInput(
+    tx.addInput(
             "94f3ec09d34b2c150d5790909ab4f657e5467bdfcfd43133b161b8d60449db03",
             2,
             // * timeLock(multiSig 2-of-3)
             "03abb915b17552210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aeac",
             1423787
-    )*/
+    )
 
 
     // * UTxO : ขาออก
@@ -202,12 +202,12 @@ fun main() {
     /*tx.addOutput(
         100_000,
         "1EoxGLjv4ZADtRBjTVeXY35czVyDdp7rU4"
-    )
+    )*/
 
     tx.addOutput(
         500_000_000_000,
         "bc1qk2rrmezy90smpnkfrdkz304pexqxuuchjgl2nz"
-    )*/
+    )
 
 
 

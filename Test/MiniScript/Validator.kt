@@ -74,9 +74,10 @@ object Validator {
                 decodedScript.add(opcode)
             }
         }
-
         return decodedScript
     }
+
+
 
 
     fun String.generateTransactionID(): String {
@@ -86,17 +87,20 @@ object Validator {
     }
 
 
-    fun checkValue(value: Any): Boolean {
+    fun checkHexValue(value: Any): Boolean {
         return when (value) {
             is String -> {
                 val hexRegex = Regex("[0-9a-fA-F]+")
-                hexRegex.matches(value) && value.HexToByteArray().size in 3..8
+                hexRegex.matches(value) && value.HexToByteArray().size in 3..5
             }
-            is Int, is Long, is Short, is Byte -> true
+            //is Int, is Long, is Short, is Byte -> true
             else -> false
         }
     }
 
+    fun List<Any>.getLockTime(): Int {
+        return this.find { checkHexValue(it) }?.toString()?.littleEndianToDeci()?.toInt() ?: 0
+    }
 
 
 }

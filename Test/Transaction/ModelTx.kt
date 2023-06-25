@@ -1,9 +1,12 @@
 package Laeliax.Transaction
 
 
+import Laeliax.MiniScript.Validator
+import Laeliax.MiniScript.Validator.getLockTime
 import Laeliax.SecureKey.EllipticCurve
 import Laeliax.SecureKey.EllipticCurve.ECDSA.Sign
 import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import Laeliax.SecureKey.WIF.extractWIF
 
 import Laeliax.util.Bech32
 import Laeliax.util.Hashing.doubleSHA256
@@ -17,48 +20,57 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 
-// * bc1qvtus7nqcuj7n8mwj446zpqjyr8l49e2x76jxpn
+// * main: bc1qvtus7nqcuj7n8mwj446zpqjyr8l49e2x76jxpn
+// * test: tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca
 fun toSegWit(amountSAT: Long, address: String): String {
     val amountSAT = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amountSAT).array().ByteArrayToHex()
     val keyHash = Bech32.bech32ToSegwit(address)[2] as ByteArray
     val keyHashLength = keyHash.size.DeciToHex()
     val script = "00${keyHashLength}${keyHash.ByteArrayToHex()}"
-    val fieldSizes = "${script}".HexToByteArray().size.DeciToHex()
+    val fieldSizes = script.HexToByteArray().size.DeciToHex()
     return "${amountSAT}${fieldSizes}${script}"
 }
 
 
 fun main() {
 
-    val privateKey = BigInteger("b8f28a772fccbf9b4f58a4f027e07dc2e35e7cd80529975e292ea34f84c4580c", 16)
-    println("Private Key: \n> ${privateKey}")
+    val wif = "L1c3ZfZu5e8TiQKS9FJ9ioh4GXEjxjob5ZSgqYRCHwrGNNEnyrBk".extractWIF()
+
+    val privateKey = BigInteger(wif, 16)
+    println("Private Key: \n| ${privateKey}")
 
     // compute: Public Key (X point, Y point)
     val curvePoint = EllipticCurve.multiplyPoint(privateKey)
 
-    val scriptTimeLock = "03abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
-    val ScriptIN1 = scriptTimeLock
+    val scriptContract = "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
+    val decodedScript: List<Any> = Validator.readeScript(scriptContract)
+    //println(decodedScript)
 
+    val time = decodedScript.getLockTime()
+    //println("Lock Time: $time")
+
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
+    // * หมายเลขกับกับชุดกฎที่จะใช้กับ UTxO นี้
     val version = NETWORKS.VERSION[1].toString()
 
     // * count IN
     val inputCount: String = byteArrayOf(1).ByteArrayToHex()
 
-    // * UTxO Input:
-    val txID = "1854c5b5af18d06ec4db1b882ade607ff01fdf367ab3c3b38cea40a0f91b615d".FlipByteOrder()
+    // * UTxO Input: 225_433 sat
+    val txID = "986bd0687a2c5e2b9f4d95b31ed9a77b77658343b5794439dd45b3a956df3afc".FlipByteOrder()
     val vout = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(0).array().ByteArrayToHex()
-    val scriptLength = ScriptIN1.HexToByteArray().size.DeciToHex()
-    val script =  ScriptIN1
+    val scriptLength = scriptContract.HexToByteArray().size.DeciToHex()
+    val script =  scriptContract
     val Sequence = "fdffffff"
 
     // * count OUT
-    val outCount: String = byteArrayOf(2).ByteArrayToHex()
+    val outCount: String = byteArrayOf(1).ByteArrayToHex()
 
     // * UTxO Output
-    val output_1 = toSegWit(6_000_000, "bc1qdt43shtcjpug6jlza5yhhmnkd6yks4aarac3yk")
-    val output_2 = toSegWit(500_000_000_000, "bc1qrrc5jmelkjtmfjjw5tt8s07nmjhvp82ypnspvu")
+    val output_1 = toSegWit(225_235, "tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca")
 
-    val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(766910).array().ByteArrayToHex()
+    val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(time).array().ByteArrayToHex()
 
 
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
@@ -75,7 +87,6 @@ fun main() {
         Sequence,
         outCount,
         output_1,
-        output_2,
         lockTime
     )
 
@@ -86,15 +97,19 @@ fun main() {
     }
 
     val unsignedTransaction = combinedTransaction.toString()
-    println("\nUnsigned Transaction: \n> ${unsignedTransaction}\n")
+    println("\nUnsigned Transaction: \n| ${unsignedTransaction}\n")
 
 
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
 
+    val hashTx = unsignedTransaction.HexToByteArray().doubleSHA256()
+
     // * Sign Transaction
-    val message = BigInteger(unsignedTransaction.HexToByteArray().doubleSHA256().ByteArrayToHex(), 16)
-    val signTx = Sign(privateKey, message)
+    val message = BigInteger(hashTx.ByteArrayToHex(), 16)
+    val signTx: Pair<BigInteger, BigInteger> = Sign(privateKey, message)
+
+    println("Signature: \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
 
     // * Verify Signature
     val validate = EllipticCurve.ECDSA.Verify(curvePoint, message, signTx)
@@ -108,11 +123,11 @@ fun main() {
     val Signature = toDERFormat(signTx) + "01"
     val SignatureLength = Signature.HexToByteArray().size.DeciToHex()
 
-    val RedeemLength = ScriptIN1.HexToByteArray().size.DeciToHex()
-    val RedeemScript = ScriptIN1
+    val RedeemLength = scriptContract.HexToByteArray().size.DeciToHex()
+    val RedeemScript = scriptContract
 
     // * components unlocking script insert to Unsign Transaction
-    val scriptSigLength  = (
+    val scriptSigLength = (
             SignatureLength +
             Signature +
             RedeemLength +
@@ -137,7 +152,6 @@ fun main() {
         Sequence,
         outCount,
         output_1,
-        output_2,
         lockTime
     )
 
@@ -148,7 +162,8 @@ fun main() {
     }
 
     val signedTransaction = combinedNewTransaction.toString()
-    println("signed Transaction: \n> $signedTransaction")
+    val fee = signedTransaction.HexToByteArray().size
+    println("Signed Transaction: min Fee ${fee}\n| $signedTransaction")
 
 }
 

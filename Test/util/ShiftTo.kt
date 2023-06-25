@@ -153,13 +153,11 @@ object ShiftTo {
         var multiplier: Long = 1
 
         val bytes = this.HexToByteArray()
-
         for (i in 0 until bytes.size) {
             val byteValue: Long = bytes[i].toLong() and 0xFF
             result += byteValue * multiplier
             multiplier *= 256
         }
-
         return result
     }
 

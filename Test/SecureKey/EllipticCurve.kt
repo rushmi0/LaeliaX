@@ -36,27 +36,30 @@ object EllipticCurve {
     data class Point(val x: BigInteger, val y: BigInteger)
 
 
-    /* *  ------------------- Elliptic Curve cryptography -------------------  * */
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
+    /*
+    * < Elliptic Curve cryptography >
+    * ในส่วนนี้เป็นการคำนวณค Public Key
+    *
+    * */
+
+    // * https://www.dcode.fr/modular-inverse
     fun modinv(A: BigInteger, N: BigInteger = P) = A.modInverse(N)
 
-    // Doubles a point on the elliptic curve
+
     fun doublePoint(point: Point): Point {
         val (x, y) = point
 
-        // หาค่า slope = (3 * x * x + A) % P
+        // ! (3 * x * x + A) % P
         val slope = (BigInteger.valueOf(3) * x * x + A) % P
 
-        // lam_denom = (2 * y) % P
         val lam_denom = (BigInteger.valueOf(2) * y) % P
 
-        // lam = (slope * (Inverse Modulo  "lam_denom" ) % P
         val lam = (slope * modinv(lam_denom)) % P
 
-        // xR = (lam * lam - (2 * x)) % P
         val xR = (lam * lam - BigInteger.valueOf(2) * x) % P
 
-        // yR = (lam * (x - xR) - y) % P
         val yR = (lam * (x - xR) - y) % P
 
         // จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
@@ -70,13 +73,10 @@ object EllipticCurve {
         val (x1, y1) = point1
         val (x2, y2) = point2
 
-        // slope = (y2 - y1) / (x1 - x2)
         val slope = ((y2 - y1) * modinv(x2 - x1)) % P
 
-        // new x = slope^2 - x1 - x2
         val xR = (slope * slope - x1 - x2) % P
 
-        // new y = slope * (x1 - new x) - y1
         val yR = (slope * (x1 - xR) - y1) % P
 
         // ! จัดการพิกัด Y ที่เป็นค่าลบ
@@ -99,8 +99,11 @@ object EllipticCurve {
     }
 
 
-    /* *  ------------------- ปรับแต่ง Public key -------------------  * */
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
+    /*
+    * ปรับแต่ง Public key
+    * */
 
     fun BigInteger.getPublicKey(): String {
         val point = multiplyPoint(this)
@@ -129,8 +132,11 @@ object EllipticCurve {
     }
 
 
-    /* *  ------------------- สร้างลายเซ็นและตรวจสอบ ECDSA -------------------  * */
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
+    /*
+    * สร้างลายเซ็นและตรวจสอบ ECDSA
+    * */
 
     object ECDSA {
 
@@ -140,31 +146,38 @@ object EllipticCurve {
         * https://github.com/bitcoin/bips/blob/master/bip-0146.mediawiki
         */
 
+        private fun generateRandomK(): BigInteger {
+            val n = N.bitLength()
+            val secureRandom = SecureRandom()
+            var k: BigInteger
+
+            do {
+                k = BigInteger(n, secureRandom)
+            } while (k >= N)
+
+            return k
+        }
+
+
         fun Sign(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
             val m = message
-            //val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
-            val k = BigInteger(256, SecureRandom())
+            val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
+            //val k = generateRandomK()
             var r = BigInteger.ZERO
             var s = BigInteger.ZERO
+
             while (r == BigInteger.ZERO || s == BigInteger.ZERO) {
                 val point = multiplyPoint(k)
                 val kInv = modinv(k, N)
                 r = point.x % N
                 s = ((m + r * privateKey) * kInv) % N
+                if (s > N / BigInteger.TWO) {
+                    val newS = N - s
+                    return Pair(r, newS)
+                }
             }
+
             return Pair(r, s)
-        }
-
-        // * https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki
-        fun toDERFormat(signature: Pair<BigInteger, BigInteger>): String {
-            val (r, s) = signature
-            val rb = r.toByteArray()
-            val sb = s.toByteArray()
-
-            val der_r = byteArrayOf(0x02.toByte()) + rb.size.toByte() + rb
-            val der_s = byteArrayOf(0x02.toByte()) + sb.size.toByte() + sb
-            val der_sig = byteArrayOf(0x30.toByte()) + (der_r.size + der_s.size).toByte() + der_r + der_s
-            return der_sig.joinToString("") { String.format("%02x", it) }
         }
 
         fun Verify(publicKeyHex: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
@@ -182,10 +195,26 @@ object EllipticCurve {
             return x == r
         }
 
+        // * https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki
+        fun toDERFormat(signature: Pair<BigInteger, BigInteger>): String {
+            val (r, s) = signature
+            val rb = r.toByteArray()
+            val sb = s.toByteArray()
+
+            val der_r = byteArrayOf(0x02.toByte()) + rb.size.toByte() + rb
+            val der_s = byteArrayOf(0x02.toByte()) + sb.size.toByte() + sb
+            val der_sig = byteArrayOf(0x30.toByte()) + (der_r.size + der_s.size).toByte() + der_r + der_s
+            return der_sig.joinToString("") { String.format("%02x", it) }
+        }
+
     }
 
 
-    /* *  ------------------- สร้างลายเซ็นและตรวจสอบ Schnorr Signature -------------------  * */
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
+    /*
+    * สร้างลายเซ็นและตรวจสอบ Schnorr Signature
+    * */
 
     // ! SchnorrSignature ยังใช้ไม่ได้
 
@@ -231,11 +260,12 @@ object EllipticCurve {
 fun main() {
 
     //val privateKey = BigInteger(256, SecureRandom())
-    val privateKey = BigInteger("b8f28a772fccbf9b4f58a4f027e07dc2e35e7cd80529975e292ea34f84c4580c", 16)
+    val privateKey = BigInteger("165F1C58AFB81B9D767FCEF47CBCDFFD3298E0480575AC8A0CA9FEC04F600C26", 16)
     println("[H] Private key: ${privateKey.toString(16)}")
     println("Private key: $privateKey")
 
     val message = BigInteger("0e2bd2792e5b75cbb05561ce5836d12abbdc201b328a2626c27484458a1a9ee", 16)
+    println("Message: $message")
 
     val curvePoint = multiplyPoint(privateKey)
     println("\nKey Point: $curvePoint")
