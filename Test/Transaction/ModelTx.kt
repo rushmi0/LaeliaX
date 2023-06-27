@@ -4,10 +4,8 @@ package Laeliax.Transaction
 import Laeliax.MiniScript.Validator
 import Laeliax.MiniScript.Validator.getLockTime
 import Laeliax.SecureKey.EllipticCurve
-import Laeliax.SecureKey.EllipticCurve.ECDSA.Sign
+import Laeliax.SecureKey.EllipticCurve.ECDSA.SignSignature
 import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
-import Laeliax.SecureKey.EllipticCurve.compressed
-import Laeliax.SecureKey.EllipticCurve.getPublicKey
 import Laeliax.SecureKey.WIF.extractWIF
 
 import Laeliax.util.Bech32
@@ -112,10 +110,9 @@ fun main() {
 
     // * Sign Transaction
     val message = BigInteger(hashTx.ByteArrayToHex(), 16)
-    val signTx: Pair<BigInteger, BigInteger> = Sign(privateKey, message)
+    val signTx: Pair<BigInteger, BigInteger> = SignSignature(privateKey, message)
 
-    val nonce = "42854675228720239947134362876390869888553449708741430898694136287991817016610"
-    println("Signature: \n| nonce = $nonce \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
+    println("Signatures: \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
 
     // * Verify Signature
 //    val validate = EllipticCurve.ECDSA.Verify(curvePoint, message, signTx)

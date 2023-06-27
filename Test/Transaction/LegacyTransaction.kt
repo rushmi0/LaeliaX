@@ -64,7 +64,7 @@ class LegacyTransaction(private val privateKey: String) {
     fun signTransaction(): String {
         val unsignedTransaction = generateUnsignedTransaction()
         val message = BigInteger(unsignedTransaction.HexToByteArray().doubleSHA256().ByteArrayToHex(), 16)
-        val signTx = EllipticCurve.ECDSA.Sign(BigInteger(privateKey, 16), message)
+        val signTx = EllipticCurve.ECDSA.SignSignature(BigInteger(privateKey, 16), message)
         return mergeSignature(signTx)
     }
 

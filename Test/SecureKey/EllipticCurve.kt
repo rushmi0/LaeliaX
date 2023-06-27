@@ -1,7 +1,7 @@
 package Laeliax.SecureKey
 
-import Laeliax.SecureKey.EllipticCurve.ECDSA.Sign
-import Laeliax.SecureKey.EllipticCurve.ECDSA.Verify
+import Laeliax.SecureKey.EllipticCurve.ECDSA.SignSignature
+import Laeliax.SecureKey.EllipticCurve.ECDSA.VerifySignature
 import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
 import Laeliax.SecureKey.EllipticCurve.compressed
 import Laeliax.SecureKey.EllipticCurve.getPublicKey
@@ -31,7 +31,6 @@ object EllipticCurve {
         BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
     )
 
-
     // * จุดบนเส้นโค้งวงรี มีพิกัด x และ y
     data class Point(val x: BigInteger, val y: BigInteger)
 
@@ -42,6 +41,8 @@ object EllipticCurve {
     * < Elliptic Curve cryptography >
     * ในส่วนนี้เป็นการคำนวณค Public Key
     *
+    * อ้างอิงจาก:
+    * https://github.com/wobine/blackboard101/blob/master/EllipticCurvesPart5-TheMagic-SigningAndVerifying.py
     * */
 
     // * https://www.dcode.fr/modular-inverse
@@ -62,7 +63,7 @@ object EllipticCurve {
 
         val yR = (lam * (x - xR) - y) % P
 
-        // จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
+        // * จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
         return Point(xR, (yR + P) % P)
     }
 
@@ -86,15 +87,30 @@ object EllipticCurve {
     }
 
     fun multiplyPoint(k: BigInteger, point: Point? = null): Point {
+        // * ตัวแปร current ถูกกำหนดให้เป็น point ที่รับเข้ามา หากไม่มีการระบุ point ค่าเริ่มต้นจะเป็นจุด G ที่ใช้ในการคูณเช่นกับ private key
         val current = point ?: G
+
+        // * แปลงจำนวนเต็ม k เป็นเลขฐานสอง
         val binary = k.toString(2)
+
+        // * เริ่มต้นด้วยจุดเริ่มต้นปัจจุบัน
         var currentPoint = current
+
+        // * วนลูปตามจำนวน binary digits ของ k
         for (i in 1 until binary.length) {
             currentPoint = doublePoint(currentPoint)
+
+            // * ถ้า binary digit ที่ตำแหน่ง i เป็น '1'  ให้บวกจุดเริ่มต้น (current) เข้ากับจุดปัจจุบัน (currentPoint)
             if (binary[i] == '1') {
                 currentPoint = addPoint(currentPoint, current)
             }
+
+            // * Debug
+            //println("binary[i] = $i:")
+            //println("Current Point: $currentPoint \n")
         }
+
+        // * ส่งคืนจุดที่คำนวณได้
         return currentPoint
     }
 
@@ -141,46 +157,28 @@ object EllipticCurve {
     object ECDSA {
 
         /*
-        * https://medium.com/bitbees/what-the-heck-is-schnorr-52ef5dba289f
         * https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki
-        * https://github.com/bitcoin/bips/blob/master/bip-0146.mediawiki
         */
 
-        private fun generateRandomK(): BigInteger {
-            val n = N.bitLength()
-            val secureRandom = SecureRandom()
-            var k: BigInteger
 
-            do {
-                k = BigInteger(n, secureRandom)
-            } while (k >= N)
-
-            return k
-        }
-
-
-        fun Sign(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
+        fun SignSignature(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
             val m = message
             val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
-            //val k = generateRandomK()
-            var r = BigInteger.ZERO
-            var s = BigInteger.ZERO
+            //val k = BigInteger(256, SecureRandom())
 
-            while (r == BigInteger.ZERO || s == BigInteger.ZERO) {
-                val point = multiplyPoint(k)
-                val kInv = modinv(k, N)
-                r = point.x % N
-                s = ((m + r * privateKey) * kInv) % N
+            val point = multiplyPoint(k)
+            val kInv = modinv(k, N)
 
-                if (s > N / BigInteger.TWO) {
-                    return Pair(r, N - s)
-                }
-            }
+            val r: BigInteger = point.x % N
+            var s: BigInteger = ((m + r * privateKey) * kInv) % N
+
+            // * https://github.com/bitcoin/bips/blob/master/bip-0146.mediawiki
+            if (s > N .shiftRight(1)) s = N - s else s
 
             return Pair(r, s)
         }
 
-        fun Verify(publicKeyPoint: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
+        fun VerifySignature(publicKeyPoint: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
             val (r, s) = signature
 
             val w = modinv(s, N)
@@ -214,13 +212,14 @@ object EllipticCurve {
 
     /*
     * สร้างลายเซ็นและตรวจสอบ Schnorr Signature
+    * https://medium.com/bitbees/what-the-heck-is-schnorr-52ef5dba289f
     * */
 
     // ! SchnorrSignature ยังใช้ไม่ได้
 
     object SchnorrSignature {
 
-        fun Sign(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
+        fun SignSignature(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
 
             val z = BigInteger(256, SecureRandom())
             val R = multiplyPoint(z) // R = z * G
@@ -237,7 +236,7 @@ object EllipticCurve {
         }
 
 
-        fun Verify(publicKey: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
+        fun VerifySignature(publicKey: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
             val (r, s) = signature
 
             val R = multiplyPoint(r) // Public key : R = r*G
@@ -276,13 +275,13 @@ fun main() {
     val compress = publicKeyPoint.compressed()
     println("[C] Public Key: $compress")
 
-    val sign = Sign(privateKey, message)
+    val sign = SignSignature(privateKey, message)
     println("\nSignature: $sign")
 
     val der = toDERFormat(sign)
     println("Der format: $der")
 
-    val validate = Verify(curvePoint, message, sign)
+    val validate = VerifySignature(curvePoint, message, sign)
     if (validate) {
         println("ECDSA Signature is Valid")
     } else {
