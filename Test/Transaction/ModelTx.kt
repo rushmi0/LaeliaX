@@ -6,6 +6,8 @@ import Laeliax.MiniScript.Validator.getLockTime
 import Laeliax.SecureKey.EllipticCurve
 import Laeliax.SecureKey.EllipticCurve.ECDSA.Sign
 import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import Laeliax.SecureKey.EllipticCurve.compressed
+import Laeliax.SecureKey.EllipticCurve.getPublicKey
 import Laeliax.SecureKey.WIF.extractWIF
 
 import Laeliax.util.Bech32
@@ -34,13 +36,15 @@ fun toSegWit(amountSAT: Long, address: String): String {
 
 fun main() {
 
-    val wif = "L1c3ZfZu5e8TiQKS9FJ9ioh4GXEjxjob5ZSgqYRCHwrGNNEnyrBk".extractWIF()
+    val wif = "L1c3ZfZu5e8TiQKS9FJ9ioh4GXEjxjob5ZSgqYRCHwrGNNEnyrBk"
+    val rawKey = wif.extractWIF()
 
-    val privateKey = BigInteger(wif, 16)
-    println("Private Key: \n| ${privateKey}")
+    val privateKey = BigInteger(rawKey, 16)
+    println("Private Key: \n| hex = $rawKey \n| dec = $privateKey \n")
 
     // compute: Public Key (X point, Y point)
     val curvePoint = EllipticCurve.multiplyPoint(privateKey)
+    println("Public Key: \n| x = ${curvePoint.x.toByteArray().ByteArrayToHex()}\n| y = ${curvePoint.y.toByteArray().ByteArrayToHex()}")
 
     val scriptContract = "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
     val decodedScript: List<Any> = Validator.readeScript(scriptContract)
@@ -104,20 +108,22 @@ fun main() {
 
 
     val hashTx = unsignedTransaction.HexToByteArray().doubleSHA256()
+    println("Message (doubleSHA256): ${hashTx.ByteArrayToHex()}\n")
 
     // * Sign Transaction
     val message = BigInteger(hashTx.ByteArrayToHex(), 16)
     val signTx: Pair<BigInteger, BigInteger> = Sign(privateKey, message)
 
-    println("Signature: \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
+    val nonce = "42854675228720239947134362876390869888553449708741430898694136287991817016610"
+    println("Signature: \n| nonce = $nonce \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
 
     // * Verify Signature
-    val validate = EllipticCurve.ECDSA.Verify(curvePoint, message, signTx)
-    if (validate) {
-        println("Signature: Valid")
-    } else {
-        println("Signature: Invalid!!")
-    }
+//    val validate = EllipticCurve.ECDSA.Verify(curvePoint, message, signTx)
+//    if (validate) {
+//        println("Signature: Valid")
+//    } else {
+//        println("Signature: Invalid!!")
+//    }
 
     // * compute: ScriptSig components
     val Signature = toDERFormat(signTx) + "01"
@@ -162,8 +168,7 @@ fun main() {
     }
 
     val signedTransaction = combinedNewTransaction.toString()
-    val fee = signedTransaction.HexToByteArray().size
-    println("Signed Transaction: min Fee ${fee}\n| $signedTransaction")
+    println("Signed Transaction: \n| $signedTransaction")
 
 }
 

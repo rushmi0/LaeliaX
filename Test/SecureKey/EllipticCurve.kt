@@ -107,13 +107,13 @@ object EllipticCurve {
 
     fun BigInteger.getPublicKey(): String {
         val point = multiplyPoint(this)
-        val publicKeyHex = "04${point.x.toString(16)}${point.y.toString(16)}"
+        val publicKeyPoint = "04${point.x.toString(16)}${point.y.toString(16)}"
         // * ถ้าขนาด public key Hex น้องกว่า 130 จะต้องแทรก "0" เข้าไปอยู่ระหว่าง "04" และพิกัด X
-        if (publicKeyHex.length < 130) {
+        if (publicKeyPoint.length < 130) {
             // * "04" + "0" + X + Y
-            return publicKeyHex.substring(0, 2) + "0" + publicKeyHex.substring(2)
+            return publicKeyPoint.substring(0, 2) + "0" + publicKeyPoint.substring(2)
         }
-        return publicKeyHex
+        return publicKeyPoint
     }
 
     fun String.compressed(): String {
@@ -171,16 +171,16 @@ object EllipticCurve {
                 val kInv = modinv(k, N)
                 r = point.x % N
                 s = ((m + r * privateKey) * kInv) % N
+
                 if (s > N / BigInteger.TWO) {
-                    val newS = N - s
-                    return Pair(r, newS)
+                    return Pair(r, N - s)
                 }
             }
 
             return Pair(r, s)
         }
 
-        fun Verify(publicKeyHex: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
+        fun Verify(publicKeyPoint: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
             val (r, s) = signature
 
             val w = modinv(s, N)
@@ -188,7 +188,7 @@ object EllipticCurve {
             val u2 = (r * w) % N
 
             val point1 = multiplyPoint(u1)
-            val point2 = multiplyPoint(u2, publicKeyHex)
+            val point2 = multiplyPoint(u2, publicKeyPoint)
 
             val point = addPoint(point1, point2)
             val x = point.x % N
@@ -270,10 +270,10 @@ fun main() {
     val curvePoint = multiplyPoint(privateKey)
     println("\nKey Point: $curvePoint")
 
-    val publicKeyHex = privateKey.getPublicKey()
-    println("[U] Public Key: $publicKeyHex")
+    val publicKeyPoint = privateKey.getPublicKey()
+    println("[U] Public Key: $publicKeyPoint")
 
-    val compress = publicKeyHex.compressed()
+    val compress = publicKeyPoint.compressed()
     println("[C] Public Key: $compress")
 
     val sign = Sign(privateKey, message)
