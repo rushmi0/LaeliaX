@@ -1,24 +1,24 @@
-package Laeliax.util
+package LaeliaX.util
 
-import Laeliax.util.ShiftTo.DeciToHex
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.HexToByteArray
-import Laeliax.util.ShiftTo.encodeBase58
-import Laeliax.util.ShiftTo.decodeBase58
+import LaeliaX.util.ShiftTo.DeciToHex
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.encodeBase58
+import LaeliaX.util.ShiftTo.decodeBase58
 
-import Laeliax.util.Hashing.RIPEMD160
-import Laeliax.util.Hashing.SHA256
-import Laeliax.util.Hashing.doubleSHA256
+import LaeliaX.util.Hashing.RIPEMD160
+import LaeliaX.util.Hashing.SHA256
+import LaeliaX.util.Hashing.doubleSHA256
 
-import Laeliax.util.Address.verify.isP2PKH
-import Laeliax.util.Address.verify.isP2WPKH
-import Laeliax.util.Address.verify.isP2WSH
-import Laeliax.util.Address.verify.getChecksum
+import LaeliaX.util.Address.verify.isP2PKH
+import LaeliaX.util.Address.verify.isP2WPKH
+import LaeliaX.util.Address.verify.isP2WSH
+import LaeliaX.util.Address.verify.getChecksum
 
-import Laeliax.util.Address.getP2PKH
-import Laeliax.util.Address.getSegWitP2SH
+import LaeliaX.util.Address.getP2PKH
+import LaeliaX.util.Address.getSegWitP2SH
 
-import Laeliax.Transaction.NETWORKS
+import LaeliaX.Transaction.NETWORKS
 
 
 object Address {

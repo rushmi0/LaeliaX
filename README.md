@@ -1,4 +1,4 @@
-# Laeliax
+# LaeliaX
 
          ♡   ∩_∩
           （„• ֊ •„)♡

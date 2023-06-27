@@ -1,6 +1,5 @@
-package Laeliax.util
+package LaeliaX.util
 
-import Laeliax.util.Hashing.doubleSHA256
 import java.math.BigInteger
 import java.util.*
 

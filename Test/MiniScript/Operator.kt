@@ -1,4 +1,4 @@
-package Laeliax.MiniScript
+package LaeliaX.MiniScript
 
 
 object OP_ {

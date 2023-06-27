@@ -1,17 +1,17 @@
-package Laeliax.SecureKey
+package LaeliaX.SecureKey
 
 
-import Laeliax.SecureKey.WIF.extractWIF
-import Laeliax.SecureKey.WIF.toWIF
+import LaeliaX.SecureKey.WIF.extractWIF
+import LaeliaX.SecureKey.WIF.toWIF
 
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.HexToByteArray
-import Laeliax.util.ShiftTo.decodeBase58
-import Laeliax.util.ShiftTo.encodeBase58
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.decodeBase58
+import LaeliaX.util.ShiftTo.encodeBase58
 
-import Laeliax.Transaction.NETWORKS
+import LaeliaX.Transaction.NETWORKS
 
-import Laeliax.util.Address.verify.getChecksum
+import LaeliaX.util.Address.verify.getChecksum
 
 
 object WIF {

@@ -1,6 +1,6 @@
-package Laeliax.util
+package LaeliaX.util
 
-import Laeliax.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.HexToByteArray
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*

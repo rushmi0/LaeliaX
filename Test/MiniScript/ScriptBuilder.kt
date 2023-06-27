@@ -1,17 +1,17 @@
-package Laeliax.MiniScript
+package LaeliaX.MiniScript
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.ByteToHex
-import Laeliax.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.ByteToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
 
-import Laeliax.util.Address.getP2WSH
-import Laeliax.util.Address.getSegWitP2SH
-import Laeliax.util.ShiftTo.DeciToHexByte
-import Laeliax.MiniScript.Validator.isMultisig
-import Laeliax.util.Address.getP2SH
+import LaeliaX.util.Address.getP2WSH
+import LaeliaX.util.Address.getSegWitP2SH
+import LaeliaX.util.ShiftTo.DeciToHexByte
+import LaeliaX.MiniScript.Validator.isMultisig
+import LaeliaX.util.Address.getP2SH
 
 class ScriptBuilder {
 

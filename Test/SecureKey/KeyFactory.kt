@@ -1,11 +1,11 @@
-package Laeliax.SecureKey
+package LaeliaX.SecureKey
 
-import Laeliax.SecureKey.Virentkey.fromRoot
-import Laeliax.SecureKey.Virentkey.fromSeed
-import Laeliax.SecureKey.Virentkey.toMasterRoot
-import Laeliax.util.Hashing.doubleSHA256
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.encodeBase58
+import LaeliaX.SecureKey.Virentkey.fromRoot
+import LaeliaX.SecureKey.Virentkey.fromSeed
+import LaeliaX.SecureKey.Virentkey.toMasterRoot
+import LaeliaX.util.Hashing.doubleSHA256
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.encodeBase58
 
 import javax.crypto.Mac
 import javax.crypto.spec.PBEKeySpec

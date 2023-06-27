@@ -5,7 +5,7 @@
  * https://www.nayuki.io/page/bitcoin-cryptography-library
  * https://github.com/nayuki/Bitcoin-Cryptography-Library
  */
-package Laeliax.util
+package LaeliaX.util
 
 import java.util.*
 

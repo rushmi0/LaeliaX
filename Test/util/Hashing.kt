@@ -1,7 +1,7 @@
-package Laeliax.util
+package LaeliaX.util
 
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
 
 import java.security.MessageDigest
 

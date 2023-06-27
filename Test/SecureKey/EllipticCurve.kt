@@ -1,14 +1,14 @@
-package Laeliax.SecureKey
+package LaeliaX.SecureKey
 
-import Laeliax.SecureKey.EllipticCurve.ECDSA.SignSignature
-import Laeliax.SecureKey.EllipticCurve.ECDSA.VerifySignature
-import Laeliax.SecureKey.EllipticCurve.ECDSA.toDERFormat
-import Laeliax.SecureKey.EllipticCurve.compressed
-import Laeliax.SecureKey.EllipticCurve.getPublicKey
-import Laeliax.SecureKey.EllipticCurve.multiplyPoint
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignature
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.VerifySignature
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import LaeliaX.SecureKey.EllipticCurve.compressed
+import LaeliaX.SecureKey.EllipticCurve.getPublicKey
+import LaeliaX.SecureKey.EllipticCurve.multiplyPoint
 
-import Laeliax.util.Hashing.SHA256
-import Laeliax.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.Hashing.SHA256
+import LaeliaX.util.ShiftTo.ByteArrayToHex
 
 import java.math.BigInteger
 import java.security.SecureRandom

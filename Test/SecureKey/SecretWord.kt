@@ -1,11 +1,11 @@
-package Laeliax.SecureKey
+package LaeliaX.SecureKey
 
-import Laeliax.util.Hashing._SHA256
-import Laeliax.util.ShiftTo.BinaryToByteArray
-import Laeliax.util.ShiftTo.ByteArrayToBinary
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.HexToBinary
-import Laeliax.util.ShiftTo.decodeBase58
+import LaeliaX.util.Hashing._SHA256
+import LaeliaX.util.ShiftTo.BinaryToByteArray
+import LaeliaX.util.ShiftTo.ByteArrayToBinary
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToBinary
+import LaeliaX.util.ShiftTo.decodeBase58
 
 import java.io.File
 import java.math.BigInteger

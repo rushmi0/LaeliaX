@@ -1,4 +1,4 @@
-package Laeliax.SecureKey;
+package LaeliaX.SecureKey;
 
 public class BIP39 {
     public static final String[] WORDLIST = {

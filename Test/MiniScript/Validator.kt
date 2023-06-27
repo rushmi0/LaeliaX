@@ -1,14 +1,14 @@
-package Laeliax.MiniScript
+package LaeliaX.MiniScript
 
 
-import Laeliax.MiniScript.Validator.readeScript
-import Laeliax.util.Hashing.doubleSHA256
-import Laeliax.util.ShiftTo.BinaryToByteArray
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.FlipByteOrder
-import Laeliax.util.ShiftTo.HexToBinary
-import Laeliax.util.ShiftTo.HexToByteArray
-import Laeliax.util.ShiftTo.littleEndianToDeci
+import LaeliaX.MiniScript.Validator.readeScript
+import LaeliaX.util.Hashing.doubleSHA256
+import LaeliaX.util.ShiftTo.BinaryToByteArray
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.FlipByteOrder
+import LaeliaX.util.ShiftTo.HexToBinary
+import LaeliaX.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.littleEndianToDeci
 
 object Validator {
 

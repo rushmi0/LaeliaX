@@ -1,8 +1,8 @@
-package Laeliax.util
+package LaeliaX.util
 
-import Laeliax.util.ShiftTo.ByteArrayToHex
-import Laeliax.util.ShiftTo.decodeBase58
-import Laeliax.util.ShiftTo.encodeBase58
+import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.decodeBase58
+import LaeliaX.util.ShiftTo.encodeBase58
 import java.math.BigInteger
 import java.util.*
 

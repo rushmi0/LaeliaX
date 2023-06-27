@@ -1,4 +1,4 @@
-package Laeliax.util
+package LaeliaX.util
 
 fun main() {
     val txID = "15e10745f15593a899cef391191bdd3d7c12412cc4696b7bcb669d0feadc8521"

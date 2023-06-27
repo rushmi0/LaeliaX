@@ -1,12 +1,12 @@
-package Laeliax.Transaction
+package LaeliaX.Transaction
 
-import Laeliax.SecureKey.EllipticCurve
-import Laeliax.util.ShiftTo.DeciToHex
-import Laeliax.util.ShiftTo.HexToByteArray
+import LaeliaX.SecureKey.EllipticCurve
+import LaeliaX.util.ShiftTo.DeciToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
 import java.math.BigInteger
 
-import Laeliax.Transaction.digitTx.ScriptSigComponents
-import Laeliax.Transaction.digitTx.mergeDataAtIndex
+import LaeliaX.Transaction.digitTx.ScriptSigComponents
+import LaeliaX.Transaction.digitTx.mergeDataAtIndex
 
 
 object digitTx {
