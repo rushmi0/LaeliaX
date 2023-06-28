@@ -54,7 +54,7 @@ fun main() {
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
     // * หมายเลขกับกับชุดกฎที่จะใช้กับ UTxO นี้
-    val version = NETWORKS.VERSION[1].toString()
+    val version = NETWORKS.VERSION[2].toString()
 
     // * count IN
     val inputCount: String = byteArrayOf(1).ByteArrayToHex()

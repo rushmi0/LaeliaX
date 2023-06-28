@@ -20,6 +20,7 @@ import LaeliaX.MiniScript.Validator.readeScript
 
 import LaeliaX.SecureKey.EllipticCurve
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import LaeliaX.SecureKey.WIF.extractWIF
 
 import java.math.BigInteger
 import java.nio.ByteBuffer
@@ -27,16 +28,12 @@ import java.nio.ByteOrder
 
 
 
-class NonsegwitUTxO(private val privateKey: String) {
+class NonsegwitUTxO(private val version: Int, private val privateKey: String) {
 
     private val inputs: MutableList<UTxOInput> = mutableListOf()
     private val outputs: MutableList<UTxOOutput> = mutableListOf()
     private var lockTime: Int? = null
-
-
     private var scriptCode: String? = null
-    private val scritpSig: String? = null
-
 
     // * UTxO ขาเข้า
     fun addInput(transactionID: String, outputIndex: Int, scriptCode: String) {
@@ -56,9 +53,10 @@ class NonsegwitUTxO(private val privateKey: String) {
         this.lockTime = readeScript(scriptCode).getLockTime()
     }
 
+
     // * ประกอบ "ธุรกรรมดิบ" ขึ้นมา
     fun generateUnsignedTransaction(): String {
-        val version = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(1).array().ByteArrayToHex()
+        val version = NETWORKS.VERSION[this.version].toString()
         val inputCount = inputs.size.DeciToHex().toInt().DeciToHexByte()
         val inputComponents = inputs.joinToString("") { it.generateInputComponents() }
 
@@ -78,23 +76,30 @@ class NonsegwitUTxO(private val privateKey: String) {
 
         val scriptSigLength: String = (
                 SignatureLength +
-                        Signature +
-                        RedeemLength +
-                        RedeemScript
-                ).HexToByteArray().size.DeciToHex()
+                Signature +
+                RedeemLength +
+                RedeemScript
+        ).HexToByteArray().size.DeciToHex()
 
-        val ScritpSig = scriptSigLength + SignatureLength + Signature + RedeemLength + RedeemScript
-        return ScritpSig
+        return scriptSigLength + SignatureLength + Signature + RedeemLength + RedeemScript
     }
 
-    fun Pair<BigInteger, BigInteger>.getScriptSig(): String {
+    private fun Pair<BigInteger, BigInteger>.getScriptSig(): String {
         return ScriptSigComponents(this)
     }
 
-    fun mergeDataAtIndex(unignTx: String, ScriptSig: String): String {
+
+    fun signTransaction(): String {
+        val unsignedTransaction = generateUnsignedTransaction()
+        val message = BigInteger(unsignedTransaction.HexToByteArray().doubleSHA256().ByteArrayToHex(), 16)
+        val signatures = EllipticCurve.ECDSA.SignSignature(BigInteger(privateKey, 16), message)
+        return mergeSignature(unsignedTransaction, signatures.getScriptSig())
+    }
+
+
+    private fun mergeSignature(unignTx: String, ScriptSig: String): String {
         val pattern = "00000000(.*?)f(.?)ffffff"
 
-        // Step 1: Find the first occurrence of the pattern
         val regex = Regex(pattern)
         val match = regex.find(unignTx)
 
@@ -102,33 +107,13 @@ class NonsegwitUTxO(private val privateKey: String) {
             val originalData = match.groupValues[1]
             val modifiedData = ScriptSig
 
-            // Step 2: Replace data with new data at the identified index
             val result = unignTx.replaceFirst(originalData, modifiedData)
 
             return result
         }
-        return unignTx // Return the original stack if the pattern is not found
+        return unignTx
     }
 
-    // ! ส่วนนี้ยังมีปัญหา
-    fun signTransaction(): String {
-        val unsignedTransaction = generateUnsignedTransaction()
-        val message = BigInteger(unsignedTransaction.HexToByteArray().doubleSHA256().ByteArrayToHex(), 16)
-        val signTx = EllipticCurve.ECDSA.SignSignature(BigInteger(privateKey, 16), message)
-        return mergeSignature(signTx)
-    }
-
-    private fun mergeSignature(signature: Pair<BigInteger, BigInteger>): String {
-        //val inputComponents = inputs.joinToString("") { it.generateInputComponents() }
-        val scriptSig = toDERFormat(signature)
-        val sigSize = scriptSig.HexToByteArray().size.DeciToHex()
-
-        val unlocking = sigSize + scriptSig + "01" + inputs.first().scriptCode.HexToByteArray().size.DeciToHex() + inputs.first().scriptCode
-        val unlockingSize = unlocking.HexToByteArray().size.DeciToHex()
-
-        val result = unlockingSize + unlocking
-        return result
-    }
 
 
     // * สร้างองค์ประกอบ UTxO ขาเข้า
@@ -167,7 +152,7 @@ class NonsegwitUTxO(private val privateKey: String) {
         fun generateOutputComponents(): String {
 
             // * โอนไปที่ P2WPKH
-            if (address.substring(0, 3) == "bc1" && address.length == 42) {
+            if (address.substring(0, 3) == "bc1" || address.substring(0, 3) == "tb1" && address.length == 42) {
                 val amounts =ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amounts).array().ByteArrayToHex()
                 val data = Bech32.bech32ToSegwit(address)[2] as ByteArray
                 val lockSize = data.size.DeciToHex()
@@ -200,10 +185,10 @@ class NonsegwitUTxO(private val privateKey: String) {
 
 fun main() {
 
-    val privateKey = "f206d54e3383e8efb5f3578403032020c84493b98e12274a40d1663ffa16da44"
-    val tx = NonsegwitUTxO(privateKey)
-    //tx.setLockTime(766910)
+    val wif = "L1c3ZfZu5e8TiQKS9FJ9ioh4GXEjxjob5ZSgqYRCHwrGNNEnyrBk"
+    val privateKey = wif.extractWIF()
 
+    val tx = NonsegwitUTxO(2, privateKey)
 
     /**
      * L1c3ZfZu5e8TiQKS9FJ9ioh4GXEjxjob5ZSgqYRCHwrGNNEnyrBk
@@ -221,7 +206,7 @@ fun main() {
     )*/
 
     tx.addInput(
-            "c95039b1ce6152a20ecab1759e924c15e25f4d980673bd64c07a43d2fb501acb",
+            "986bd0687a2c5e2b9f4d95b31ed9a77b77658343b5794439dd45b3a956df3afc",
             0,
             // * timeLock 2_438_924: ต้องรอเวลาที่กำหนด จึงจะสามารถปลดล็อคได้
             "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
@@ -243,9 +228,13 @@ fun main() {
             1423787
     )*/
 
+    tx.addOutput(
+        225_235,
+        "tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca"
+    )
 
     // * UTxO : ขาออก
-    tx.addOutput(
+    /*tx.addOutput(
         15_000,
         "bc1qxs3jjwpj88f0zq9yyhk02yfpgt5945gwwp2ddx"
     )
@@ -258,26 +247,20 @@ fun main() {
     tx.addOutput(
         500_000_000_000,
         "bc1qk2rrmezy90smpnkfrdkz304pexqxuuchjgl2nz"
-    )
+    )*/
 
 
     val unsignedTransaction = tx.generateUnsignedTransaction()
-    val txID = unsignedTransaction.generateTransactionID()
+    val txUID = unsignedTransaction.generateTransactionID()
 
-    println("Transaction ID:\n${txID}\n")
-    println("Unsigned Transaction:\n$unsignedTransaction")
+    println("Transaction ID: $txUID")
+    println("Unsigned Transaction:\n$unsignedTransaction \n")
 
+    val signedTransaction = tx.signTransaction()
+    val txSID = signedTransaction.generateTransactionID()
 
-    /*
-    Transaction ID:
-    f92606b97f2f2c51fee54f3a5325f77b7cb044284052408b9c27711b445a5ddd
-
-    Unsigned Transaction:
-    01000000039da47a058bfb24449675d9fe886b7c8d16351fd9007491750bb4553fb346ee4f000000002903beb30bb17521027de11310f7c996a2d1021276c11759ebb6f26d229dfd0bbc93b7f72fd36e3b8cacfdffffff5639600aa1a15d37633a1b40d969140afc6169046fe1dbf7f8d3fae1c6b2bfaf010000006952210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aefdffffff03db4904d6b861b13331d4cfdf7b46e557f6b49a9090570d152c4bd309ecf394020000007103beb30bb1756952210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aeacfdffffff0320a10700000000001600146aeb185d7890788d4be2ed097bee766e896857bda0860100000000001976a914977ae6e32349b99b72196cb62b5ef37329ed81b488ac0088526a74000000160014b2863de4442be1b0cec91b6c28bea1c9806e7317beb30b00
-    */
-
-    //val signedTransaction = tx.signTransaction()
-    //println("Signed tx:\n$signedTransaction")
+    println("Transaction ID: $txSID")
+    println("Signed Transaction: \n$signedTransaction")
 
 
 } // ! Road to Bitcoin developer

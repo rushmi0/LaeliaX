@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/MiniScript/Validator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/MiniScript/Validator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/Transaction/LegacyTransaction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOOutput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$inputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$inputComponents$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$outputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$outputComponents$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransactionKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransactionKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,19 +38,20 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
-    <configuration name="AddressKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.util.AddressKt" />
+    <configuration name="DigitTxKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.DigitTxKt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DigitTxKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.DigitTxKt" />
+    <configuration name="ModelTxKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.ModelTxKt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -92,10 +81,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.NonsegwitUTxOKt" />
+        <item itemvalue="Kotlin.ModelTxKt" />
         <item itemvalue="Kotlin.ScriptBuilderKt" />
         <item itemvalue="Kotlin.ValidatorKt" />
         <item itemvalue="Kotlin.DigitTxKt" />
-        <item itemvalue="Kotlin.AddressKt" />
       </list>
     </recent_temporary>
   </component>
@@ -108,7 +97,7 @@
       <option name="presentableId" value="Default" />
       <updated>1687873410993</updated>
       <workItem from="1687873412138" duration="10144000" />
-      <workItem from="1687931052392" duration="3580000" />
+      <workItem from="1687931052392" duration="7877000" />
     </task>
     <servers />
   </component>
@@ -125,8 +114,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
-          <line>56</line>
-          <option name="timeStamp" value="16" />
+          <line>113</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
