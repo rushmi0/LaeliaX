@@ -1,6 +1,6 @@
 package LaeliaX.Transaction
 
-import LaeliaX.SecureKey.EllipticCurve
+
 import LaeliaX.util.Bech32
 import LaeliaX.util.ShiftTo.decodeBase58
 import LaeliaX.util.Hashing.doubleSHA256
@@ -10,12 +10,15 @@ import LaeliaX.util.ShiftTo.DeciToHex
 import LaeliaX.util.ShiftTo.HexToByteArray
 import LaeliaX.util.ShiftTo.ByteToHex
 import LaeliaX.util.ShiftTo.DeciToHexByte
-
 import LaeliaX.util.ShiftTo.FlipByteOrder
+
 import LaeliaX.MiniScript.Validator.generateTransactionID
 
 import LaeliaX.MiniScript.OP_
+import LaeliaX.MiniScript.Validator.getLockTime
+import LaeliaX.MiniScript.Validator.readeScript
 
+import LaeliaX.SecureKey.EllipticCurve
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
 
 import java.math.BigInteger
@@ -24,27 +27,34 @@ import java.nio.ByteOrder
 
 
 
-class LegacyTransaction(private val privateKey: String) {
+class NonsegwitUTxO(private val privateKey: String) {
 
     private val inputs: MutableList<UTxOInput> = mutableListOf()
     private val outputs: MutableList<UTxOOutput> = mutableListOf()
-    private var lockTime: Int = 0
+    private var lockTime: Int? = null
 
-    fun addInput(txID: String, vout: Int, scriptCode: String, lockTime: Int) {
-        this.lockTime = lockTime
-        val input = UTxOInput(txID, vout, scriptCode, lockTime)
-        inputs.add(input)
+
+    private var scriptCode: String? = null
+    private val scritpSig: String? = null
+
+
+    // * UTxO ขาเข้า
+    fun addInput(transactionID: String, outputIndex: Int, scriptCode: String) {
+        val input = UTxOInput(transactionID, outputIndex, scriptCode)
+        this.inputs.add(input)
+        this.scriptCode = scriptCode
+        setLockTime(scriptCode)
     }
 
+    // * UTxO ขาออก
     fun addOutput(amounts: Long, address: String) {
         val output = UTxOOutput(amounts, address)
-        outputs.add(output)
+        this.outputs.add(output)
     }
 
-    /*
-    fun setLockTime(lockTime: Int) {
-        this.lockTime = lockTime
-    }*/
+    private fun setLockTime(scriptCode: String) {
+        this.lockTime = readeScript(scriptCode).getLockTime()
+    }
 
     // * ประกอบ "ธุรกรรมดิบ" ขึ้นมา
     fun generateUnsignedTransaction(): String {
@@ -54,11 +64,51 @@ class LegacyTransaction(private val privateKey: String) {
 
         val outputCount = outputs.size.DeciToHex().toInt().DeciToHexByte()
         val outputComponents = outputs.joinToString("") { it.generateOutputComponents() }
-        val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(this.lockTime).array().ByteArrayToHex()
+        val lockTime = this.lockTime?.let { ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(it).array().ByteArrayToHex() }
 
         return version + inputCount + inputComponents + outputCount + outputComponents + lockTime
     }
 
+    private fun ScriptSigComponents(SignaturePoint: Pair<BigInteger, BigInteger>): String {
+        val Signature = toDERFormat(SignaturePoint) + "01"
+        val SignatureLength: String = Signature.HexToByteArray().size.DeciToHex()
+
+        val RedeemLength: String = this.scriptCode.toString().HexToByteArray().size.DeciToHex()
+        val RedeemScript: String = this.scriptCode.toString()
+
+        val scriptSigLength: String = (
+                SignatureLength +
+                        Signature +
+                        RedeemLength +
+                        RedeemScript
+                ).HexToByteArray().size.DeciToHex()
+
+        val ScritpSig = scriptSigLength + SignatureLength + Signature + RedeemLength + RedeemScript
+        return ScritpSig
+    }
+
+    fun Pair<BigInteger, BigInteger>.getScriptSig(): String {
+        return ScriptSigComponents(this)
+    }
+
+    fun mergeDataAtIndex(unignTx: String, ScriptSig: String): String {
+        val pattern = "00000000(.*?)f(.?)ffffff"
+
+        // Step 1: Find the first occurrence of the pattern
+        val regex = Regex(pattern)
+        val match = regex.find(unignTx)
+
+        if (match != null) {
+            val originalData = match.groupValues[1]
+            val modifiedData = ScriptSig
+
+            // Step 2: Replace data with new data at the identified index
+            val result = unignTx.replaceFirst(originalData, modifiedData)
+
+            return result
+        }
+        return unignTx // Return the original stack if the pattern is not found
+    }
 
     // ! ส่วนนี้ยังมีปัญหา
     fun signTransaction(): String {
@@ -82,13 +132,15 @@ class LegacyTransaction(private val privateKey: String) {
 
 
     // * สร้างองค์ประกอบ UTxO ขาเข้า
-    private data class UTxOInput(val txID: String, val vout: Int, val scriptCode: String, val lockTime: Int) {
+    private data class UTxOInput(val txID: String, val vout: Int, val scriptCode: String) {
 
         // * https://en.bitcoin.it/wiki/Dump_format#CTxIn
         fun generateInputComponents(): String {
             val txIDFlip = txID.FlipByteOrder()
             val voutHex = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(vout).array().ByteArrayToHex()
             val scriptSize = scriptCode.HexToByteArray().size.DeciToHex()
+
+            val time = readeScript(scriptCode).getLockTime()
 
             // * คุณสมบัติเฉพาะ
             val sequence: List<String> = listOf(
@@ -97,7 +149,7 @@ class LegacyTransaction(private val privateKey: String) {
                 "feffffff"  // ยกเลิกการใช้คุณสมบัติ "replace-by-fee" (RBF)
             )
 
-            return if (lockTime > 0) {
+            return if (time > 0) {
                 txIDFlip + voutHex + scriptSize + scriptCode + sequence[1]
             }
             else {
@@ -149,7 +201,7 @@ class LegacyTransaction(private val privateKey: String) {
 fun main() {
 
     val privateKey = "f206d54e3383e8efb5f3578403032020c84493b98e12274a40d1663ffa16da44"
-    val tx = LegacyTransaction(privateKey)
+    val tx = NonsegwitUTxO(privateKey)
     //tx.setLockTime(766910)
 
 
@@ -171,9 +223,8 @@ fun main() {
     tx.addInput(
             "c95039b1ce6152a20ecab1759e924c15e25f4d980673bd64c07a43d2fb501acb",
             0,
-            // * timeLock 74852: ต้องรอเวลาที่กำหนด จึงจะสามารถปลดล็อคได้
-            "03abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac",
-        1423787
+            // * timeLock 2_438_924: ต้องรอเวลาที่กำหนด จึงจะสามารถปลดล็อคได้
+            "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
     )
 
     /*tx.addInput(
@@ -182,7 +233,7 @@ fun main() {
         // * multiSig 2-of-3: ต้องใช้ลายเซ็นขั้นต่ำ 2 ใน 3 ในการปลดล็อค
         "52210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753ae",
         0
-    )*/
+    )
 
     tx.addInput(
             "94f3ec09d34b2c150d5790909ab4f657e5467bdfcfd43133b161b8d60449db03",
@@ -190,7 +241,7 @@ fun main() {
             // * timeLock(multiSig 2-of-3)
             "03abb915b17552210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aeac",
             1423787
-    )
+    )*/
 
 
     // * UTxO : ขาออก
@@ -199,16 +250,15 @@ fun main() {
         "bc1qxs3jjwpj88f0zq9yyhk02yfpgt5945gwwp2ddx"
     )
 
-    /*tx.addOutput(
+    tx.addOutput(
         100_000,
         "1EoxGLjv4ZADtRBjTVeXY35czVyDdp7rU4"
-    )*/
+    )
 
     tx.addOutput(
         500_000_000_000,
         "bc1qk2rrmezy90smpnkfrdkz304pexqxuuchjgl2nz"
     )
-
 
 
     val unsignedTransaction = tx.generateUnsignedTransaction()

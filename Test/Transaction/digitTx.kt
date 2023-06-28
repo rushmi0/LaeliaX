@@ -35,7 +35,7 @@ object digitTx {
         //val countIndex = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(time).array().ByteArrayToHex()
 
         // Pattern to detect and capture data
-        val pattern = "00000000(.*?)fdffffff"
+        val pattern = "00000000(.*?)f(.?)ffffff"
 
         // Step 1: Find the first occurrence of the pattern
         val regex = Regex(pattern)
@@ -104,7 +104,7 @@ fun main() {
     val scriptContract = "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
 
     val scriptSig = ScriptSigComponents(scriptContract, sig)
-
+    println(scriptSig)
 
     //val stack = "0100000001fc3adf56a9b345dd394479b5438365777ba7d91eb3954d9f2b5e2c7a68d06b980000000029030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff01d36f0300000000001600149058b7a55f5d5f88667a01fd66dd59e379002f5d0c372500"
     val stack = "0100000002cb1a50fbd2437ac064bd7306984d5fe2154c929e75b1ca0ea25261ceb13950c9000000002903abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff03db4904d6b861b13331d4cfdf7b46e557f6b49a9090570d152c4bd309ecf394020000007003abb915b17552210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aeacfdffffff02983a000000000000160014342329383239d2f100a425ecf5112142e85ad10e0088526a74000000160014b2863de4442be1b0cec91b6c28bea1c9806e7317abb91500"

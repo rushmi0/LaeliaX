@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/item/store/Java&quot;
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/MiniScript/Validator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/MiniScript/Validator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/LegacyTransaction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$UTxOOutput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$inputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$inputComponents$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$outputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction$generateUnsignedTransaction$outputComponents$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransaction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransactionKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/LegacyTransactionKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Rn6HVQve5ngLqhgHe8iUCqsi7c" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/rushmi0/item/store/JVM/LaeliaX",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
     <configuration name="AddressKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="LaeliaX.util.AddressKt" />
       <module name="LaeliaX" />
@@ -13,10 +61,74 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="DigitTxKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.DigitTxKt" />
+      <module name="LaeliaX" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NonsegwitUTxOKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.NonsegwitUTxOKt" />
+      <module name="LaeliaX" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ScriptBuilderKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.MiniScript.ScriptBuilderKt" />
+      <module name="LaeliaX" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ValidatorKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.MiniScript.ValidatorKt" />
+      <module name="LaeliaX" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.NonsegwitUTxOKt" />
+        <item itemvalue="Kotlin.ScriptBuilderKt" />
+        <item itemvalue="Kotlin.ValidatorKt" />
+        <item itemvalue="Kotlin.DigitTxKt" />
         <item itemvalue="Kotlin.AddressKt" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="" />
+      <created>1687873410993</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687873410993</updated>
+      <workItem from="1687873412138" duration="10144000" />
+      <workItem from="1687931052392" duration="3580000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/Transaction/digitTx.kt</url>
+          <line>29</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
+          <line>56</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
