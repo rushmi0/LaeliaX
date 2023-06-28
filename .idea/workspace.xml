@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="">
+    <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="Rename file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/util/Address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/util/Address.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,27 +25,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/rushmi0/item/store/JVM/LaeliaX",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/item/store/JVM/LaeliaX&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
     <configuration name="AddressKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="LaeliaX.util.AddressKt" />
+      <module name="LaeliaX" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EllipticCurveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.EllipticCurveKt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -78,20 +79,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ValidatorKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.MiniScript.ValidatorKt" />
-      <module name="LaeliaX" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.NonsegwitUTxOKt" />
+        <item itemvalue="Kotlin.EllipticCurveKt" />
         <item itemvalue="Kotlin.AddressKt" />
         <item itemvalue="Kotlin.ModelTxKt" />
         <item itemvalue="Kotlin.ScriptBuilderKt" />
-        <item itemvalue="Kotlin.ValidatorKt" />
       </list>
     </recent_temporary>
   </component>
@@ -104,7 +98,8 @@
       <option name="presentableId" value="Default" />
       <updated>1687873410993</updated>
       <workItem from="1687873412138" duration="10144000" />
-      <workItem from="1687931052392" duration="14312000" />
+      <workItem from="1687931052392" duration="14741000" />
+      <workItem from="1687963286077" duration="3526000" />
     </task>
     <servers />
   </component>
@@ -124,12 +119,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
-          <line>115</line>
+          <line>116</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
-          <line>162</line>
+          <line>163</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>

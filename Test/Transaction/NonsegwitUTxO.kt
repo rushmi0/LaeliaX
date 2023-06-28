@@ -19,6 +19,7 @@ import LaeliaX.MiniScript.Validator.getLockTime
 import LaeliaX.MiniScript.Validator.readeScript
 
 import LaeliaX.SecureKey.EllipticCurve
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.decodeDER
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
 import LaeliaX.SecureKey.WIF.extractWIF
 import LaeliaX.util.Address.verify.isP2PKH
@@ -184,7 +185,7 @@ class NonsegwitUTxO(private val version: Int, private val privateKey: String) {
                 return amounts + scriptSize + scriptCode
             }
 
-            return "Invalid 'sat' amount or 'address'"
+            throw IllegalArgumentException("Invalid 'sat' amount or 'address'")
         }
 
     }

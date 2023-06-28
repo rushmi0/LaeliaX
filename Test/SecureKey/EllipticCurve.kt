@@ -196,13 +196,74 @@ object EllipticCurve {
         // * https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki
         fun toDERFormat(signature: Pair<BigInteger, BigInteger>): String {
             val (r, s) = signature
-            val rb = r.toByteArray()
-            val sb = s.toByteArray()
+            val derSignature = ByteArray(r.toByteArray().size + s.toByteArray().size + 6)
+            derSignature[0] = 0x30 // Sequence tag
+            derSignature[1] = (derSignature.size - 2).toByte() // Total length
 
-            val der_r = byteArrayOf(0x02.toByte()) + rb.size.toByte() + rb
-            val der_s = byteArrayOf(0x02.toByte()) + sb.size.toByte() + sb
-            val der_sig = byteArrayOf(0x30.toByte()) + (der_r.size + der_s.size).toByte() + der_r + der_s
-            return der_sig.joinToString("") { String.format("%02x", it) }
+            derSignature[2] = 0x02 // Integer tag for r value
+            derSignature[3] = r.toByteArray().size.toByte() // Length of r value
+            val rBytes = r.toByteArray()
+            System.arraycopy(rBytes, 0, derSignature, 4, rBytes.size)
+
+            derSignature[rBytes.size + 4] = 0x02 // Integer tag for s value
+            derSignature[rBytes.size + 5] = s.toByteArray().size.toByte() // Length of s value
+            val sBytes = s.toByteArray()
+            System.arraycopy(sBytes, 0, derSignature, rBytes.size + 6, sBytes.size)
+
+            return derSignature.ByteArrayToHex()
+        }
+
+        fun decodeDER(derEncodedSignature: String): Pair<BigInteger, BigInteger> {
+            val signatureBytes = derEncodedSignature.chunked(2)
+                .map { it.toInt(16).toByte() }
+                .toByteArray()
+
+            var index = 0
+
+            // Verify sequence tag
+            if (signatureBytes[index++] != 0x30.toByte()) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid sequence tag")
+            }
+
+            // Read and verify total length
+            val totalLength = signatureBytes[index++].toInt() and 0xFF
+            if (totalLength != signatureBytes.size - 2) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect total length")
+            }
+
+            // Verify r value tag
+            if (signatureBytes[index++] != 0x02.toByte()) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid r value tag")
+            }
+
+            // Read and verify r value length
+            val rLength = signatureBytes[index++].toInt() and 0xFF
+            if (rLength > totalLength - 6) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect r value length")
+            }
+
+            // Read r value
+            val rBytes = signatureBytes.copyOfRange(index, index + rLength)
+            val r = BigInteger(1, rBytes)
+
+            index += rLength
+
+            // Verify s value tag
+            if (signatureBytes[index++] != 0x02.toByte()) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid s value tag")
+            }
+
+            // Read and verify s value length
+            val sLength = signatureBytes[index++].toInt() and 0xFF
+            if (sLength != totalLength - 4 - rLength) {
+                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect s value length")
+            }
+
+            // Read s value
+            val sBytes = signatureBytes.copyOfRange(index, index + sLength)
+            val s = BigInteger(1, sBytes)
+
+            return Pair(r, s)
         }
 
     }
@@ -276,7 +337,7 @@ fun main() {
     println("[C] Public Key: $compress")
 
     val sign = SignSignature(privateKey, message)
-    println("\nSignature: $sign")
+    println("\nSignature: \n r = ${sign.first} \n s = ${sign.second}")
 
     val der = toDERFormat(sign)
     println("Der format: $der")
@@ -287,5 +348,19 @@ fun main() {
     } else {
         println("ECDSA Signature is Invalid")
     }
+
+    println()
+
+    val pointRS_ = "3045022100bcfca85cc0582a456aefd52539747bf24342b360f821d66a570fb7b754b687e60220727b9a924630de7f0c22f41d1c424952823d716ec4368072dfe117f395747fa8"
+    val data_ = EllipticCurve.ECDSA.decodeDER(pointRS_)
+    println("r = ${data_.first} \ns = ${data_.second}\n")
+
+    val pointRS = "3044022072ce638af2bdd4be5398b80b8dac3e41451947ad9beb09ba579521db64f279a9022050cba5a4fb6e002033ad53eb1b715933f602b6562ed66e788ca12f50866d10fc"
+    val data = EllipticCurve.ECDSA.decodeDER(pointRS)
+    println("r = ${data.first} \ns = ${data.second}")
+
+    // invalid: 0200000001fc3adf56a9b345dd394479b5438365777ba7d91eb3954d9f2b5e2c7a68d06b980000000073483045022100bcfca85cc0582a456aefd52539747bf24342b360f821d66a570fb7b754b687e60220727b9a924630de7f0c22f41d1c424952823d716ec4368072dfe117f395747fa80129030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff01983a000000000000160014342329383239d2f100a425ecf5112142e85ad10e0c372500
+    // valid:   0200000001fc3adf56a9b345dd394479b5438365777ba7d91eb3954d9f2b5e2c7a68d06b980000000072473044022072ce638af2bdd4be5398b80b8dac3e41451947ad9beb09ba579521db64f279a9022050cba5a4fb6e002033ad53eb1b715933f602b6562ed66e788ca12f50866d10fc0129030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff01983a000000000000160014342329383239d2f100a425ecf5112142e85ad10e0c372500
+
 
 }
