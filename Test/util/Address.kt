@@ -19,6 +19,7 @@ import LaeliaX.util.Address.getP2PKH
 import LaeliaX.util.Address.getSegWitP2SH
 
 import LaeliaX.Transaction.NETWORKS
+import LaeliaX.util.Address.getP2WPKH
 
 
 object Address {
@@ -27,15 +28,72 @@ object Address {
 
 
     private fun P2WSH(network: String, data: String): String {
-        val script = data.SHA256()
-        val scriptHash = script.HexToByteArray()
-        return Bech32.segwitToBech32("bc", 0, scriptHash)
+
+        // * เมื่อตรวจสอบค่า network และสร้าง Locking Script ตาม network นั้น
+        return when (network) {
+
+            // * ในกรณีที่ค่า network เป็น "main" หรือ "test"
+            "main",
+            "test" -> {
+
+                // * คำนวณค่าแฮช SHA256 ของแฮชข้อมูลและแปลงเป็น ByteArray
+                val scriptHash: ByteArray = data.SHA256().HexToByteArray()
+
+                val pointer = when (network) {
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 'bc'
+                    "main" -> CHAIN.MAIN["bech32"]
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "test" -> 'tb'
+                    "test" -> CHAIN.TEST["bech32"]
+
+                    // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+                    else -> throw IllegalArgumentException("Invalid network")
+                }.toString()
+
+                // * เข้ารหัสด้วยด้วย Bech32 เพื่อให้มนุษย์อ่านง่าย
+                Bech32.segwitToBech32(pointer, 0, scriptHash)
+            }
+
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            else -> throw IllegalArgumentException("Invalid network")
+        }
     }
 
     private fun P2WPKH(network: String, data: String): String {
-        val pubkey = data.SHA256()
-        val pubkeyHas = pubkey.RIPEMD160().HexToByteArray()
-        return Bech32.segwitToBech32("bc", 0, pubkeyHas)
+
+        // * เมื่อตรวจสอบค่า network และสร้าง Locking Script ตาม network นั้น
+        return when (network) {
+
+            // * ในกรณีที่ค่า network เป็น "main" หรือ "test"
+            "main",
+            "test" -> {
+
+                // * คำนวณค่าแฮช SHA256 ของข้อมูล
+                val dataHash256: String = data.SHA256()
+
+                // * คำนวณค่าแฮช RIPEMD160 ของแฮชข้อมูลและแปลงเป็น ByteArray
+                val scriptHash: ByteArray = dataHash256.RIPEMD160().HexToByteArray()
+
+                val pointer = when (network) {
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 'bc'
+                    "main" -> CHAIN.MAIN["bech32"]
+
+                    // * ดึงค่าสคริปต์สำหรับเครือข่าย "test" -> 'tb'
+                    "test" -> CHAIN.TEST["bech32"]
+
+                    // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+                    else -> throw IllegalArgumentException("Invalid network")
+                }.toString()
+
+                // * เข้ารหัสด้วยด้วย Bech32 เพื่อให้มนุษย์อ่านง่าย
+                Bech32.segwitToBech32(pointer, 0, scriptHash)
+            }
+
+            // ! แจ้งเตือนข้อผิดพลาดในกรณีที่ network ไม่ถูกต้อง
+            else -> throw IllegalArgumentException("Invalid network")
+        }
     }
 
     private fun P2PKH(network: String, data: String): String {
@@ -53,7 +111,7 @@ object Address {
                 // * คำนวณค่าแฮช RIPEMD160 ของแฮชข้อมูล
                 val scriptHash: String = dataHash256.RIPEMD160()
 
-                val prefix = when (network) {
+                val pointer = when (network) {
 
                     // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x00
                     "main" -> CHAIN.MAIN["p2pkh"]
@@ -66,12 +124,12 @@ object Address {
                 }.toString()
 
                 // * รวมสคริปต์และแฮชสคริปต์เข้าด้วยกัน
-                val components = prefix + scriptHash
+                val components = pointer + scriptHash
 
                 // * คำนวณเช็คซัม
                 val checksum: ByteArray = components.HexToByteArray().getChecksum()
 
-                // * ประกอบสคริปต์ prefix และ dataHash256 เข้าด้วยกัน
+                // * ประกอบสคริปต์ pointer และ dataHash256 เข้าด้วยกัน
                 val combine = components + checksum.ByteArrayToHex()
 
                 // * เข้ารหัสและคืนค่าเป็น Base58
@@ -98,7 +156,7 @@ object Address {
                 // * คำนวณค่าแฮช RIPEMD160 ของแฮชข้อมูล
                 val scriptHash: String = dataHash256.RIPEMD160()
 
-                val prefix = when (network) {
+                val pointer = when (network) {
 
                     // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x05
                     "main" -> CHAIN.MAIN["p2sh"]
@@ -111,12 +169,12 @@ object Address {
                 }.toString()
 
                 // * รวมสคริปต์และแฮชสคริปต์เข้าด้วยกัน
-                val components = prefix + scriptHash
+                val components = pointer + scriptHash
 
                 // * คำนวณเช็คซัม
                 val checksum: ByteArray = components.HexToByteArray().getChecksum()
                 
-                // * ประกอบสคริปต์ prefix และ dataHash256 เข้าด้วยกัน
+                // * ประกอบสคริปต์ pointer และ dataHash256 เข้าด้วยกัน
                 val combine = components + checksum.ByteArrayToHex()
 
                 // * เข้ารหัสและคืนค่าเป็น Base58
@@ -154,7 +212,7 @@ object Address {
                 val size: String = dataHash.HexToByteArray().size.DeciToHex()
 
                 // * เมื่อตรวจสอบค่า network อีกครั้ง
-                val prefix = when (network) {
+                val pointer = when (network) {
 
                     // * ดึงค่าสคริปต์สำหรับเครือข่าย "main" -> 0x00
                     "main" -> CHAIN.MAIN["p2pkh"]
@@ -167,8 +225,8 @@ object Address {
 
                 }.toString()
 
-                // * ประกอบ script โดยรวมค่า prefix, size, และ dataHash256 เข้าด้วยกัน
-                val combine = prefix + size + dataHash
+                // * ประกอบ script โดยรวมค่า pointer, size, และ dataHash256 เข้าด้วยกัน
+                val combine = pointer + size + dataHash
 
                 // * ส่งค่าสคริปตไปห่อด้วย P2SH โดยเรียกใช้ getP2SH() -> P2SH( SegWit )
                 combine.getP2SH(network)
@@ -239,7 +297,7 @@ object Address {
             val witVer = decodedAddress[1] as Int
             val witProg = decodedAddress[2] as ByteArray
 
-            return witVer == 0 || humanPart == "bc" && witProg.size == 32
+            return witVer == 0 || humanPart == "bc" || humanPart == "bt" && witProg.size == 32
         }
 
         private fun P2WPKH(address: String): Boolean {
@@ -248,7 +306,7 @@ object Address {
             val witVer = decodedAddress[1] as Int
             val witProg = decodedAddress[2] as ByteArray
 
-            return witVer == 0 || humanPart == "bc" && witProg.size == 20
+            return witVer == 0 && humanPart == "bc" || humanPart == "bt" && witProg.size == 20
         }
 
         // ──────────────────────────────────────────────────────────────────────────────────────── \\
@@ -277,9 +335,11 @@ fun main() {
     // * สร้าง Locking Script รูปแบบต่าง ๆ
     val isPublicKey = "02aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8db"
     val lockP2PKH = isPublicKey.getP2PKH("main")
+    val lockP2WPKH = isPublicKey.getP2WPKH("test")
     val lockNested = isPublicKey.getSegWitP2SH("main")
     println(lockP2PKH)
     println(lockNested)
+    println(lockP2WPKH)
 
 
     // * ตรวจสอบ Locking Script รูปแบบต่าง ๆ

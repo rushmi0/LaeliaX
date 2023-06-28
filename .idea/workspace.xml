@@ -6,8 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/util/Address.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/util/Address.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,12 +45,13 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
-    <configuration name="DigitTxKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.Transaction.DigitTxKt" />
+    <configuration name="AddressKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.util.AddressKt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -81,10 +88,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Kotlin.NonsegwitUTxOKt" />
+        <item itemvalue="Kotlin.AddressKt" />
         <item itemvalue="Kotlin.ModelTxKt" />
         <item itemvalue="Kotlin.ScriptBuilderKt" />
         <item itemvalue="Kotlin.ValidatorKt" />
-        <item itemvalue="Kotlin.DigitTxKt" />
       </list>
     </recent_temporary>
   </component>
@@ -97,12 +104,15 @@
       <option name="presentableId" value="Default" />
       <updated>1687873410993</updated>
       <workItem from="1687873412138" duration="10144000" />
-      <workItem from="1687931052392" duration="7877000" />
+      <workItem from="1687931052392" duration="14312000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -114,10 +124,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
-          <line>113</line>
+          <line>115</line>
           <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
+          <line>162</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

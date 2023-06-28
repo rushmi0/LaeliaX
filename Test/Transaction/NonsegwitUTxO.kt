@@ -21,6 +21,8 @@ import LaeliaX.MiniScript.Validator.readeScript
 import LaeliaX.SecureKey.EllipticCurve
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
 import LaeliaX.SecureKey.WIF.extractWIF
+import LaeliaX.util.Address.verify.isP2PKH
+import LaeliaX.util.Address.verify.isP2WPKH
 
 import java.math.BigInteger
 import java.nio.ByteBuffer
@@ -152,34 +154,41 @@ class NonsegwitUTxO(private val version: Int, private val privateKey: String) {
         fun generateOutputComponents(): String {
 
             // * โอนไปที่ P2WPKH
-            if (address.substring(0, 3) == "bc1" || address.substring(0, 3) == "tb1" && address.length == 42) {
-                val amounts =ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amounts).array().ByteArrayToHex()
+            if (address.isP2WPKH()) {
+                val amounts = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amounts).array().ByteArrayToHex()
                 val data = Bech32.bech32ToSegwit(address)[2] as ByteArray
-                val lockSize = data.size.DeciToHex()
-                val lockingScript = "${OP_.FALSE.ByteToHex()}${lockSize}${data.ByteArrayToHex()}"
-                val lockingSizes = lockingScript.HexToByteArray().size.DeciToHex()
-                return amounts + lockingSizes + lockingScript
+                val size = data.size.DeciToHex()
+                val scriptCode = OP_.FALSE.ByteToHex() + size + data.ByteArrayToHex()
+                val scriptSize = scriptCode.HexToByteArray().size.DeciToHex()
+                return amounts + scriptSize + scriptCode
             }
-            /*else if () {
-
-            }*/
 
             // * โอนไปที่ P2PKH
-            else {
+            if (address.isP2PKH()) {
                 val amounts = ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(amounts).array().ByteArrayToHex()
                 val data = address.decodeBase58().HexToByteArray()
                 val keyHash = data.copyOfRange(1, 21)
                 val keyHashSize = keyHash.size.DeciToHex()
 
                 // * https://en.bitcoin.it/wiki/Dump_format#CScript
-                val lockingScript = "${OP_.DUP.ByteToHex()}${OP_.HASH160.ByteToHex()}${keyHashSize}${keyHash.ByteArrayToHex()}${OP_.EQUALVERIFY.ByteToHex()}${OP_.CHECKSIG.ByteToHex()}"
+                val scriptCode = (
+                        OP_.DUP.ByteToHex() +
+                        OP_.HASH160.ByteToHex() +
+                        keyHashSize +
+                        keyHash.ByteArrayToHex() +
+                        OP_.EQUALVERIFY.ByteToHex() +
+                        OP_.CHECKSIG.ByteToHex()
+                )
 
-                val lockingSizes = lockingScript.HexToByteArray().size.DeciToHex()
-                return amounts + lockingSizes + lockingScript
+                val scriptSize = scriptCode.HexToByteArray().size.DeciToHex()
+                return amounts + scriptSize + scriptCode
             }
+
+            return "Invalid 'sat' amount or 'address'"
         }
 
     }
+
 }
 
 
@@ -228,18 +237,18 @@ fun main() {
             1423787
     )*/
 
-    tx.addOutput(
+    /*tx.addOutput(
         225_235,
         "tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca"
-    )
+    )*/
 
     // * UTxO : ขาออก
-    /*tx.addOutput(
+    tx.addOutput(
         15_000,
         "bc1qxs3jjwpj88f0zq9yyhk02yfpgt5945gwwp2ddx"
     )
 
-    tx.addOutput(
+   /* tx.addOutput(
         100_000,
         "1EoxGLjv4ZADtRBjTVeXY35czVyDdp7rU4"
     )
