@@ -35,6 +35,9 @@ object ShiftTo {
         return stringBuilder.toString()
     }
 
+    fun ByteArray.ByteArrayToBigInteger(): BigInteger {
+        return BigInteger(1, this)
+    }
 
 
     fun String.BinaryToByteArray(): ByteArray {
@@ -171,14 +174,11 @@ object ShiftTo {
     }
 
     fun String.encodeBase64(): String {
-        val byteArray = this.toByteArray()
-        val encodedBytes = Base64.getEncoder().encode(byteArray)
-        return String(encodedBytes)
+        return Base64.getEncoder().encodeToString(this.HexToByteArray())
     }
 
     fun String.decodeBase64(): String {
-        val decodedBytes = Base64.getDecoder().decode(this)
-        return String(decodedBytes)
+        return Base64.getDecoder().decode(this).ByteArrayToHex()
     }
 
 

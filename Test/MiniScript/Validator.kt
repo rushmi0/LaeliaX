@@ -1,9 +1,10 @@
 package LaeliaX.MiniScript
 
 
-import LaeliaX.MiniScript.Validator.checkHexValue
 import LaeliaX.MiniScript.Validator.getLockTime
-import LaeliaX.MiniScript.Validator.readeScript
+import LaeliaX.MiniScript.Validator.getPublicKeys
+import LaeliaX.MiniScript.Validator.viewScript
+import LaeliaX.util.Address.getP2WPKH
 import LaeliaX.util.Hashing.doubleSHA256
 import LaeliaX.util.ShiftTo.BinaryToByteArray
 import LaeliaX.util.ShiftTo.ByteArrayToHex
@@ -53,7 +54,7 @@ object Validator {
         return false
     }
 
-    fun readeScript(scriptHex: String): List<Any> {
+    fun viewScript(scriptHex: String): List<Any> {
         val decodedScript = mutableListOf<Any>()
 
         var i = 0
@@ -85,58 +86,58 @@ object Validator {
         return binHash.FlipByteOrder()
     }
 
-    fun checkHexValue(value: Any): Boolean {
+    private fun checkHexValue(value: Any): Boolean {
         return when (value) {
             is String -> {
                 val hexRegex = Regex("[0-9a-fA-F]+")
-                hexRegex.matches(value) && value.HexToByteArray().size in 3..5
+                hexRegex.matches(value) && value.HexToByteArray().size in 1..5
             }
             //is Int, is Long, is Short, is Byte -> true
             else -> false
         }
     }
 
+    private fun checkPublicKey(value: Any): Boolean {
+        return when (value) {
+            is String -> {
+                val hexRegex = Regex("[0-9a-fA-F]+")
+                val keyLength = value.HexToByteArray().size
+                val byteArray = value.HexToByteArray()
+                val group = byteArray.isNotEmpty() && (byteArray[0] == 2.toByte() || byteArray[0] == 3.toByte())
+                hexRegex.matches(value) && keyLength == 33 && group
+            }
+            else -> false
+        }
+    }
+
+    fun List<Any>.getPublicKeys(): List<String> {
+        return this.filter { checkPublicKey(it) }.map { it.toString() }
+    }
+
     fun List<Any>.getLockTime(): Int {
         return this.find { checkHexValue(it) }?.toString()?.littleEndianToDeci()?.toInt() ?: 0
     }
 
-    fun processScriptData(scriptCode: String): Int {
-        val data: List<Any> = readeScript(scriptCode)
-        val lockTime = mutableListOf<String>()
-
-        data.forEach { value ->
-            val isValid = checkHexValue(value)
-            if (isValid) {
-                val time = value.toString().littleEndianToDeci()
-                lockTime.add(time.toString())
-            }
-        }
-
-        val result = if (lockTime.isNotEmpty()) lockTime[0].toInt() else 0
-        return result
-    }
 
 }
 
 fun main() {
     val scriptHex = "03abb915b17552210387cb20433e452a106312107c4885c27f209d6ece38055c8bea56bcbc8b1e29af2102635073d61f689a9dd38be41de286ebb3b7137394164d1e00d4eeb4d7bb9ff48b21024bc043a0c094c5f2865dad0c494e6e9e76b3d6034e4ce55895b4ea8285274dd753aeac"
 
-    val decodedScript = readeScript(scriptHex)
-    println(decodedScript.getLockTime())
+    val decodedScript = viewScript(scriptHex)
+    println("Script: ${decodedScript.size} \n| $decodedScript")
 
-    decodedScript.forEach { value ->
-        val isValid = checkHexValue(value)
-        if (isValid == true) {
-            println("locktime: $value, is ${value.toString().littleEndianToDeci()}")
-        }
+    val publicKey: List<String> = decodedScript.getPublicKeys()
+    println("Public Key: ${publicKey.size} \n| $publicKey")
 
+    for (i in 0 until publicKey.size) {
+        println("| ${publicKey[i].getP2WPKH("main")}")
     }
 
-//    for (index in decodedScript) {
-//        val read = index.checkHexValue()
-//    }
+    val time = decodedScript.getLockTime()
+    println("Time: \n| $time")
 
-    val littleEndianValue = "abb915"
-    val decimalValue = littleEndianValue.littleEndianToDeci()
-    println(decimalValue)
+
+    println("5802".littleEndianToDeci())
+
 }

@@ -297,7 +297,7 @@ object Address {
             val witVer = decodedAddress[1] as Int
             val witProg = decodedAddress[2] as ByteArray
 
-            return witVer == 0 || humanPart == "bc" || humanPart == "bt" && witProg.size == 32
+            return (humanPart == "bc" || humanPart == "tb") && witVer == 0 && witProg.size == 32
         }
 
         private fun P2WPKH(address: String): Boolean {
@@ -306,7 +306,7 @@ object Address {
             val witVer = decodedAddress[1] as Int
             val witProg = decodedAddress[2] as ByteArray
 
-            return witVer == 0 && humanPart == "bc" || humanPart == "bt" && witProg.size == 20
+            return (humanPart == "bc" || humanPart == "tb") && witVer == 0 && witProg.size == 20
         }
 
         // ──────────────────────────────────────────────────────────────────────────────────────── \\

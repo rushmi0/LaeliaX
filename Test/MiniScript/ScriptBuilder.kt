@@ -185,7 +185,7 @@ fun main() {
 
 
     // * TimeLock
-    val blockNumber = 2_438_924
+    val blockNumber = 2_440_116
     //val dataHex = scriptMultiSig
     val dataHex = "02aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8db"
 
@@ -197,6 +197,6 @@ fun main() {
     println("TimeLock Nested SegWit: ${scriptTimeLock.getSegWitP2SH("main")}\n")
 
     println("TimeLock P2SH testnet: ${scriptTimeLock.getP2SH("test")}")
-    println("TimeLock SegWit P2SH testnet: ${scriptTimeLock.getSegWitP2SH("test")}")
+    //println("TimeLock SegWit P2SH testnet: ${scriptTimeLock.getSegWitP2SH("test")}")
 
 }

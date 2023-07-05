@@ -1,14 +1,19 @@
 package LaeliaX.SecureKey
 
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignature
+
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignatures
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.VerifySignature
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+
 import LaeliaX.SecureKey.EllipticCurve.compressed
 import LaeliaX.SecureKey.EllipticCurve.getPublicKey
+import LaeliaX.SecureKey.EllipticCurve.isPointOnCurve
 import LaeliaX.SecureKey.EllipticCurve.multiplyPoint
 
 import LaeliaX.util.Hashing.SHA256
+import LaeliaX.util.ShiftTo.ByteArrayToBigInteger
 import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
 
 import java.math.BigInteger
 import java.security.SecureRandom
@@ -26,7 +31,7 @@ object EllipticCurve {
     private val B = BigInteger.valueOf(7)
     private val P = BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16)
     private val N = BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", 16)
-    private val G = Point(
+    val G = Point(
         BigInteger("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16),
         BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
     )
@@ -34,12 +39,27 @@ object EllipticCurve {
     // * จุดบนเส้นโค้งวงรี มีพิกัด x และ y
     data class Point(val x: BigInteger, val y: BigInteger)
 
+    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+
+    /*
+    * ตรวจสอบจุดบนโค้งวงรี Secp256k1
+    * */
+
+    fun isPointOnCurve(point: Pair<BigInteger, BigInteger>): Boolean {
+        val (x, y) = point
+
+        // * ตรวจสอบว่าจุดนั้นเป็นไปตามสมการเส้นโค้งวงรี หรือไม่: y^2 = x^3 + Ax + B (mod P)
+        val leftSide = (y * y).mod(this.P)
+        val rightSide = (x.pow(3) + this.A * x + this.B).mod(this.P)
+
+        return leftSide == rightSide
+    }
 
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
     /*
-    * < Elliptic Curve cryptography >
-    * ในส่วนนี้เป็นการคำนวณค Public Key
+    * < Elliptic Curve Cryptography >
+    * ในส่วนนี้เป็นการคำนวณ Public Key
     *
     * อ้างอิงจาก:
     * https://github.com/wobine/blackboard101/blob/master/EllipticCurvesPart5-TheMagic-SigningAndVerifying.py
@@ -76,19 +96,19 @@ object EllipticCurve {
 
         val slope = ((y2 - y1) * modinv(x2 - x1)) % P
 
-        val xR = (slope * slope - x1 - x2) % P
+        val x = (slope * slope - x1 - x2) % P
 
-        val yR = (slope * (x1 - xR) - y1) % P
+        val y = (slope * (x1 - x) - y1) % P
 
         // ! จัดการพิกัด Y ที่เป็นค่าลบ
-        val yResult = if (yR < BigInteger.ZERO) yR + P else yR
+        val yResult = if (y < A) y + P else y
 
-        return Point(xR, yResult)
+        return Point(x, yResult)
     }
 
     fun multiplyPoint(k: BigInteger, point: Point? = null): Point {
         // * ตัวแปร current ถูกกำหนดให้เป็น point ที่รับเข้ามา หากไม่มีการระบุ point ค่าเริ่มต้นจะเป็นจุด G ที่ใช้ในการคูณเช่นกับ private key
-        val current = point ?: G
+        val current: Point = point ?: G
 
         // * แปลงจำนวนเต็ม k เป็นเลขฐานสอง
         val binary = k.toString(2)
@@ -104,12 +124,7 @@ object EllipticCurve {
             if (binary[i] == '1') {
                 currentPoint = addPoint(currentPoint, current)
             }
-
-            // * Debug
-            //println("binary[i] = $i:")
-            //println("Current Point: $currentPoint \n")
         }
-
         // * ส่งคืนจุดที่คำนวณได้
         return currentPoint
     }
@@ -121,30 +136,59 @@ object EllipticCurve {
     * ปรับแต่ง Public key
     * */
 
-    fun BigInteger.getPublicKey(): String {
-        val point = multiplyPoint(this)
+    private fun fullPublicKeyPoint(k: BigInteger): String {
+        val point: Point = multiplyPoint(k)
         val publicKeyPoint = "04${point.x.toString(16)}${point.y.toString(16)}"
+
         // * ถ้าขนาด public key Hex น้องกว่า 130 จะต้องแทรก "0" เข้าไปอยู่ระหว่าง "04" และพิกัด X
         if (publicKeyPoint.length < 130) {
+
             // * "04" + "0" + X + Y
             return publicKeyPoint.substring(0, 2) + "0" + publicKeyPoint.substring(2)
         }
         return publicKeyPoint
     }
 
-    fun String.compressed(): String {
-        if (this.length == 130 && this.substring(0, 2) != "04") {
+    private fun groupSelection(publicKey: String): String {
+        if (publicKey.length == 130 && publicKey.substring(0, 2) != "04") {
             throw IllegalArgumentException("Invalid Public Key")
         }
-        val x = BigInteger(this.substring(2, 66), 16)
-        val y = BigInteger(this.substring(66), 16)
+        val x = BigInteger(publicKey.substring(2, 66), 16)
+        val y = BigInteger(publicKey.substring(66), 16)
 
-        val compressedKey = if (y and BigInteger.ONE == BigInteger.ZERO) {
+        val groupkeys = if (y and BigInteger.ONE == BigInteger.ZERO) {
             "02" + x.toString(16).padStart(64, '0')
         } else {
             "03" + x.toString(16).padStart(64, '0')
         }
-        return compressedKey
+        return groupkeys
+    }
+
+    private fun decompressPublicKey(compressedPublicKey: String): Point {
+        val byteArray = compressedPublicKey.HexToByteArray()
+        val xCoord = byteArray.copyOfRange(1, byteArray.size).ByteArrayToBigInteger()
+        val isYEven = byteArray[0] == 2.toByte()
+
+        val xSquare = (xCoord.modPow(BigInteger.valueOf(3), N) + B) % N
+        val y = xSquare.modPow((N + BigInteger("1")) / BigInteger("4"), N)
+        val isYSquareEven = y.mod(BigInteger.TWO) == BigInteger.ZERO
+
+        val computedY = if (isYSquareEven != isYEven) N - y else y
+
+        return Point(xCoord, computedY)
+    }
+
+
+    fun String.getDecompress(): Point {
+        return decompressPublicKey(this)
+    }
+
+    fun BigInteger.getPublicKey(): String {
+        return fullPublicKeyPoint(this)
+    }
+
+    fun String.compressed(): String {
+        return groupSelection(this)
     }
 
 
@@ -160,20 +204,21 @@ object EllipticCurve {
         * https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki
         */
 
-
-        fun SignSignature(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
+        fun SignSignatures(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
             val m = message
-            val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
-            //val k = BigInteger(256, SecureRandom())
+            //val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
+            val k = BigInteger(256, SecureRandom())
 
-            val point = multiplyPoint(k)
-            val kInv = modinv(k, N)
+            val point: Point = multiplyPoint(k)
+            val kInv: BigInteger = modinv(k, N)
 
             val r: BigInteger = point.x % N
             var s: BigInteger = ((m + r * privateKey) * kInv) % N
 
             // * https://github.com/bitcoin/bips/blob/master/bip-0146.mediawiki
-            if (s > N .shiftRight(1)) s = N - s else s
+            if (s > N . shiftRight(1)) {
+                s = N - s
+            }
 
             return Pair(r, s)
         }
@@ -189,82 +234,58 @@ object EllipticCurve {
             val point2 = multiplyPoint(u2, publicKeyPoint)
 
             val point = addPoint(point1, point2)
+
             val x = point.x % N
+
             return x == r
         }
 
         // * https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki
         fun toDERFormat(signature: Pair<BigInteger, BigInteger>): String {
             val (r, s) = signature
-            val derSignature = ByteArray(r.toByteArray().size + s.toByteArray().size + 6)
-            derSignature[0] = 0x30 // Sequence tag
-            derSignature[1] = (derSignature.size - 2).toByte() // Total length
+            val rb = r.toByteArray()
+            val sb = s.toByteArray()
 
-            derSignature[2] = 0x02 // Integer tag for r value
-            derSignature[3] = r.toByteArray().size.toByte() // Length of r value
-            val rBytes = r.toByteArray()
-            System.arraycopy(rBytes, 0, derSignature, 4, rBytes.size)
-
-            derSignature[rBytes.size + 4] = 0x02 // Integer tag for s value
-            derSignature[rBytes.size + 5] = s.toByteArray().size.toByte() // Length of s value
-            val sBytes = s.toByteArray()
-            System.arraycopy(sBytes, 0, derSignature, rBytes.size + 6, sBytes.size)
-
-            return derSignature.ByteArrayToHex()
+            val der_r = byteArrayOf(0x02.toByte()) + rb.size.toByte() + rb
+            val der_s = byteArrayOf(0x02.toByte()) + sb.size.toByte() + sb
+            val der_sig = byteArrayOf(0x30.toByte()) + (der_r.size + der_s.size).toByte() + der_r + der_s
+            return der_sig.ByteArrayToHex()
         }
 
-        fun decodeDER(derEncodedSignature: String): Pair<BigInteger, BigInteger> {
-            val signatureBytes = derEncodedSignature.chunked(2)
-                .map { it.toInt(16).toByte() }
-                .toByteArray()
+        fun fromDERFormat(signature: String): Pair<BigInteger, BigInteger>? {
+            val signatureBytes = signature.HexToByteArray()
 
-            var index = 0
-
-            // Verify sequence tag
-            if (signatureBytes[index++] != 0x30.toByte()) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid sequence tag")
+            if (signatureBytes.size < 9 || signatureBytes[0] != 0x30.toByte()) {
+                return null
             }
 
-            // Read and verify total length
-            val totalLength = signatureBytes[index++].toInt() and 0xFF
-            if (totalLength != signatureBytes.size - 2) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect total length")
+            var index = 1
+            val length = signatureBytes[index++].toInt() and 0xFF
+
+            if (length + index != signatureBytes.size || signatureBytes[index] != 0x02.toByte()) {
+                return null
             }
 
-            // Verify r value tag
-            if (signatureBytes[index++] != 0x02.toByte()) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid r value tag")
-            }
-
-            // Read and verify r value length
+            index++
             val rLength = signatureBytes[index++].toInt() and 0xFF
-            if (rLength > totalLength - 6) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect r value length")
-            }
-
-            // Read r value
             val rBytes = signatureBytes.copyOfRange(index, index + rLength)
             val r = BigInteger(1, rBytes)
 
             index += rLength
 
-            // Verify s value tag
-            if (signatureBytes[index++] != 0x02.toByte()) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Invalid s value tag")
+            if (signatureBytes[index] != 0x02.toByte()) {
+                return null
             }
 
-            // Read and verify s value length
+            index++
             val sLength = signatureBytes[index++].toInt() and 0xFF
-            if (sLength != totalLength - 4 - rLength) {
-                throw IllegalArgumentException("Invalid DER-encoded signature: Incorrect s value length")
-            }
-
-            // Read s value
             val sBytes = signatureBytes.copyOfRange(index, index + sLength)
             val s = BigInteger(1, sBytes)
 
             return Pair(r, s)
         }
+
+
 
     }
 
@@ -280,7 +301,7 @@ object EllipticCurve {
 
     object SchnorrSignature {
 
-        fun SignSignature(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
+        fun SignSignatures(privateKey: BigInteger, message: BigInteger): Pair<BigInteger, BigInteger> {
 
             val z = BigInteger(256, SecureRandom())
             val R = multiplyPoint(z) // R = z * G
@@ -319,6 +340,11 @@ object EllipticCurve {
 // * ตัวอย่าง
 fun main() {
 
+
+//    val isGOnCurve = isPointOnCurve()
+//    println("Is G on Curve? $isGOnCurve")
+
+
     //val privateKey = BigInteger(256, SecureRandom())
     val privateKey = BigInteger("165F1C58AFB81B9D767FCEF47CBCDFFD3298E0480575AC8A0CA9FEC04F600C26", 16)
     println("[H] Private key: ${privateKey.toString(16)}")
@@ -336,7 +362,7 @@ fun main() {
     val compress = publicKeyPoint.compressed()
     println("[C] Public Key: $compress")
 
-    val sign = SignSignature(privateKey, message)
+    val sign = SignSignatures(privateKey, message)
     println("\nSignature: \n r = ${sign.first} \n s = ${sign.second}")
 
     val der = toDERFormat(sign)
@@ -348,19 +374,5 @@ fun main() {
     } else {
         println("ECDSA Signature is Invalid")
     }
-
-    println()
-
-    val pointRS_ = "3045022100bcfca85cc0582a456aefd52539747bf24342b360f821d66a570fb7b754b687e60220727b9a924630de7f0c22f41d1c424952823d716ec4368072dfe117f395747fa8"
-    val data_ = EllipticCurve.ECDSA.decodeDER(pointRS_)
-    println("r = ${data_.first} \ns = ${data_.second}\n")
-
-    val pointRS = "3044022072ce638af2bdd4be5398b80b8dac3e41451947ad9beb09ba579521db64f279a9022050cba5a4fb6e002033ad53eb1b715933f602b6562ed66e788ca12f50866d10fc"
-    val data = EllipticCurve.ECDSA.decodeDER(pointRS)
-    println("r = ${data.first} \ns = ${data.second}")
-
-    // invalid: 0200000001fc3adf56a9b345dd394479b5438365777ba7d91eb3954d9f2b5e2c7a68d06b980000000073483045022100bcfca85cc0582a456aefd52539747bf24342b360f821d66a570fb7b754b687e60220727b9a924630de7f0c22f41d1c424952823d716ec4368072dfe117f395747fa80129030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff01983a000000000000160014342329383239d2f100a425ecf5112142e85ad10e0c372500
-    // valid:   0200000001fc3adf56a9b345dd394479b5438365777ba7d91eb3954d9f2b5e2c7a68d06b980000000072473044022072ce638af2bdd4be5398b80b8dac3e41451947ad9beb09ba579521db64f279a9022050cba5a4fb6e002033ad53eb1b715933f602b6562ed66e788ca12f50866d10fc0129030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff01983a000000000000160014342329383239d2f100a425ecf5112142e85ad10e0c372500
-
 
 }

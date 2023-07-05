@@ -5,6 +5,8 @@ import LaeliaX.SecureKey.Virentkey.fromSeed
 import LaeliaX.SecureKey.Virentkey.toMasterRoot
 import LaeliaX.util.Hashing.doubleSHA256
 import LaeliaX.util.ShiftTo.ByteArrayToHex
+import LaeliaX.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.decodeBase58
 import LaeliaX.util.ShiftTo.encodeBase58
 
 import javax.crypto.Mac
@@ -59,4 +61,27 @@ fun main() {
     val privateKey = fromSeed(seed)
     val root = toMasterRoot(privateKey)
     println("Master Private Key: $root")
+
+
+    val xpub = "xpub6CdMV3MbyaUdLCxVqffsL28bNRjERapsEQbQ9RMcUYup9f7Fj9u1Qd4eC3z4QrxW1AQByzGUNW5DhT8oJ8DxgvWtDJCEF6F1LAcMAGZndd2"
+    val rawXpub = xpub.decodeBase58()
+    val datasize = rawXpub.HexToByteArray().size
+    //println(datasize)
+    println(rawXpub)
+    println(datasize)
+
+    val depth = rawXpub.HexToByteArray().copyOfRange(4, 5).ByteArrayToHex()
+    println("Depth: $depth")
+
+    val fingerPrint = rawXpub.HexToByteArray().copyOfRange(5, 9).ByteArrayToHex()
+    println("FingerPrint: $fingerPrint")
+
+    val index = rawXpub.HexToByteArray().copyOfRange(9, 13).ByteArrayToHex()
+    println("Index: $index")
+
+    val chainCode = rawXpub.HexToByteArray().copyOfRange(13, 45).ByteArrayToHex()
+    println("Chain Code: $chainCode")
+
+    val publicKey = rawXpub.HexToByteArray().copyOfRange(45, 78).ByteArrayToHex()
+    println("Public Key: $publicKey")
 }

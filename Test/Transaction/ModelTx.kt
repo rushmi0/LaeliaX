@@ -4,8 +4,9 @@ package LaeliaX.Transaction
 import LaeliaX.MiniScript.Validator
 import LaeliaX.MiniScript.Validator.getLockTime
 import LaeliaX.SecureKey.EllipticCurve
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignature
+import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignatures
 import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+
 import LaeliaX.SecureKey.WIF.extractWIF
 
 import LaeliaX.util.Bech32
@@ -44,8 +45,8 @@ fun main() {
     val curvePoint = EllipticCurve.multiplyPoint(privateKey)
     println("Public Key: \n| x = ${curvePoint.x.toByteArray().ByteArrayToHex()}\n| y = ${curvePoint.y.toByteArray().ByteArrayToHex()}")
 
-    val scriptContract = "030c3725b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
-    val decodedScript: List<Any> = Validator.readeScript(scriptContract)
+    val scriptContract = "03bf3a25b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbac"
+    val decodedScript: List<Any> = Validator.viewScript(scriptContract)
     //println(decodedScript)
 
     val time = decodedScript.getLockTime()
@@ -60,7 +61,7 @@ fun main() {
     val inputCount: String = byteArrayOf(1).ByteArrayToHex()
 
     // * UTxO Input: 225_433 sat
-    val txID = "986bd0687a2c5e2b9f4d95b31ed9a77b77658343b5794439dd45b3a956df3afc".FlipByteOrder()
+    val txID = "3432f8ecb645a8a1a9eedab6b06f51f81eb9ad02b31df4e4ee46b8a22838dc1b".FlipByteOrder()
     val vout = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(0).array().ByteArrayToHex()
     val scriptLength = scriptContract.HexToByteArray().size.DeciToHex()
     val script =  scriptContract
@@ -70,7 +71,7 @@ fun main() {
     val outCount: String = byteArrayOf(1).ByteArrayToHex()
 
     // * UTxO Output
-    val output_1 = toSegWit(225_235, "tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca")
+    val output_1 = toSegWit(5_000, "tb1qjpvt0f2lt40csen6q87kdh2eudusqt6atkf5ca")
 
     val lockTime = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(time).array().ByteArrayToHex()
 
@@ -110,7 +111,7 @@ fun main() {
 
     // * Sign Transaction
     val message = BigInteger(hashTx.ByteArrayToHex(), 16)
-    val signTx: Pair<BigInteger, BigInteger> = SignSignature(privateKey, message)
+    val signTx: Pair<BigInteger, BigInteger> = SignSignatures(privateKey, message)
 
     println("Signatures: \n| r = ${signTx.first}\n| s = ${signTx.second}\n")
 
