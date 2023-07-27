@@ -6,12 +6,14 @@ import java.nio.ByteOrder
 import LaeliaX.util.ShiftTo.ByteArrayToHex
 import LaeliaX.util.ShiftTo.ByteToHex
 import LaeliaX.util.ShiftTo.HexToByteArray
+import LaeliaX.util.ShiftTo.DeciToHexByte
 
 import LaeliaX.util.Address.getP2WSH
 import LaeliaX.util.Address.getSegWitP2SH
-import LaeliaX.util.ShiftTo.DeciToHexByte
-import LaeliaX.MiniScript.Validator.isMultisig
 import LaeliaX.util.Address.getP2SH
+
+import LaeliaX.MiniScript.Validator.isMultisig
+
 
 class ScriptBuilder {
 

@@ -7,7 +7,6 @@ import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
 
 import LaeliaX.SecureKey.EllipticCurve.compressed
 import LaeliaX.SecureKey.EllipticCurve.getPublicKey
-import LaeliaX.SecureKey.EllipticCurve.isPointOnCurve
 import LaeliaX.SecureKey.EllipticCurve.multiplyPoint
 
 import LaeliaX.util.Hashing.SHA256
@@ -26,15 +25,8 @@ import java.security.SecureRandom
 
 object EllipticCurve {
 
-    // * Secp256k1 curve parameters:
-    private val A = BigInteger.ZERO
-    private val B = BigInteger.valueOf(7)
-    private val P = BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16)
-    private val N = BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", 16)
-    val G = Point(
-        BigInteger("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16),
-        BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
-    )
+    // * Parameters secp256k1
+    private val curve = Secp256K1
 
     // * จุดบนเส้นโค้งวงรี มีพิกัด x และ y
     data class Point(val x: BigInteger, val y: BigInteger)
@@ -49,8 +41,8 @@ object EllipticCurve {
         val (x, y) = point
 
         // * ตรวจสอบว่าจุดนั้นเป็นไปตามสมการเส้นโค้งวงรี หรือไม่: y^2 = x^3 + Ax + B (mod P)
-        val leftSide = (y * y).mod(this.P)
-        val rightSide = (x.pow(3) + this.A * x + this.B).mod(this.P)
+        val leftSide = (y * y).mod(curve.P())
+        val rightSide = (x.pow(3) + curve.A() * x + curve.B()).mod(curve.P())
 
         return leftSide == rightSide
     }
@@ -66,25 +58,25 @@ object EllipticCurve {
     * */
 
     // * https://www.dcode.fr/modular-inverse
-    fun modinv(A: BigInteger, N: BigInteger = P) = A.modInverse(N)
+    fun modinv(A: BigInteger, N: BigInteger = curve.P()) = A.modInverse(N)
 
 
     fun doublePoint(point: Point): Point {
         val (x, y) = point
 
         // ! (3 * x * x + A) % P
-        val slope = (BigInteger.valueOf(3) * x * x + A) % P
+        val slope = (BigInteger.valueOf(3) * x * x + curve.A()) % curve.P()
 
-        val lam_denom = (BigInteger.valueOf(2) * y) % P
+        val lam_denom = (BigInteger.valueOf(2) * y) % curve.P()
 
-        val lam = (slope * modinv(lam_denom)) % P
+        val lam = (slope * modinv(lam_denom)) % curve.P()
 
-        val xR = (lam * lam - BigInteger.valueOf(2) * x) % P
+        val xR = (lam * lam - BigInteger.valueOf(2) * x) % curve.P()
 
-        val yR = (lam * (x - xR) - y) % P
+        val yR = (lam * (x - xR) - y) % curve.P()
 
         // * จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
-        return Point(xR, (yR + P) % P)
+        return Point(xR, (yR + curve.P()) % curve.P())
     }
 
     fun addPoint(point1: Point, point2: Point): Point {
@@ -94,21 +86,21 @@ object EllipticCurve {
         val (x1, y1) = point1
         val (x2, y2) = point2
 
-        val slope = ((y2 - y1) * modinv(x2 - x1)) % P
+        val slope = ((y2 - y1) * modinv(x2 - x1)) % curve.P()
 
-        val x = (slope * slope - x1 - x2) % P
+        val x = (slope * slope - x1 - x2) % curve.P()
 
-        val y = (slope * (x1 - x) - y1) % P
+        val y = (slope * (x1 - x) - y1) % curve.P()
 
         // ! จัดการพิกัด Y ที่เป็นค่าลบ
-        val yResult = if (y < A) y + P else y
+        val yResult = if (y < curve.A()) y + curve.P() else y
 
         return Point(x, yResult)
     }
 
     fun multiplyPoint(k: BigInteger, point: Point? = null): Point {
         // * ตัวแปร current ถูกกำหนดให้เป็น point ที่รับเข้ามา หากไม่มีการระบุ point ค่าเริ่มต้นจะเป็นจุด G ที่ใช้ในการคูณเช่นกับ private key
-        val current: Point = point ?: G
+        val current: Point = point ?: curve.G()
 
         // * แปลงจำนวนเต็ม k เป็นเลขฐานสอง
         val binary = k.toString(2)
@@ -169,11 +161,11 @@ object EllipticCurve {
         val xCoord = byteArray.copyOfRange(1, byteArray.size).ByteArrayToBigInteger()
         val isYEven = byteArray[0] == 2.toByte()
 
-        val xSquare = (xCoord.modPow(BigInteger.valueOf(3), N) + B) % N
-        val y = xSquare.modPow((N + BigInteger("1")) / BigInteger("4"), N)
+        val xSquare = (xCoord.modPow(BigInteger.valueOf(3), curve.N()) + curve.B()) % curve.N()
+        val y = xSquare.modPow((curve.N() + BigInteger("1")) / BigInteger("4"), curve.N())
         val isYSquareEven = y.mod(BigInteger.TWO) == BigInteger.ZERO
 
-        val computedY = if (isYSquareEven != isYEven) N - y else y
+        val computedY = if (isYSquareEven != isYEven) curve.N() - y else y
 
         return Point(xCoord, computedY)
     }
@@ -210,14 +202,14 @@ object EllipticCurve {
             val k = BigInteger(256, SecureRandom())
 
             val point: Point = multiplyPoint(k)
-            val kInv: BigInteger = modinv(k, N)
+            val kInv: BigInteger = modinv(k, curve.N())
 
-            val r: BigInteger = point.x % N
-            var s: BigInteger = ((m + r * privateKey) * kInv) % N
+            val r: BigInteger = point.x % curve.N()
+            var s: BigInteger = ((m + r * privateKey) * kInv) % curve.N()
 
             // * https://github.com/bitcoin/bips/blob/master/bip-0146.mediawiki
-            if (s > N . shiftRight(1)) {
-                s = N - s
+            if (s > curve.N() . shiftRight(1)) {
+                s = curve.N() - s
             }
 
             return Pair(r, s)
@@ -226,16 +218,16 @@ object EllipticCurve {
         fun VerifySignature(publicKeyPoint: Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
             val (r, s) = signature
 
-            val w = modinv(s, N)
-            val u1 = (message * w) % N
-            val u2 = (r * w) % N
+            val w = modinv(s, curve.N())
+            val u1 = (message * w) % curve.N()
+            val u2 = (r * w) % curve.N()
 
             val point1 = multiplyPoint(u1)
             val point2 = multiplyPoint(u2, publicKeyPoint)
 
             val point = addPoint(point1, point2)
 
-            val x = point.x % N
+            val x = point.x % curve.N()
 
             return x == r
         }
@@ -306,13 +298,13 @@ object EllipticCurve {
             val z = BigInteger(256, SecureRandom())
             val R = multiplyPoint(z) // R = z * G
 
-            val r = R.x % N // พิกัด x ของ R
+            val r = R.x % curve.N() // พิกัด x ของ R
 
             val hashInput = r.toByteArray() + multiplyPoint(privateKey).x.toByteArray() + message.toByteArray()
             val hash = hashInput.ByteArrayToHex().SHA256() // Hash256(r || P || m)
 
             val k = privateKey
-            val s = (z + BigInteger(hash, 16) * k) % N // s = z + Hash256(r || P || m) * k
+            val s = (z + BigInteger(hash, 16) * k) % curve.N() // s = z + Hash256(r || P || m) * k
 
             return Pair(r, s)
         }
@@ -339,11 +331,6 @@ object EllipticCurve {
 
 // * ตัวอย่าง
 fun main() {
-
-
-//    val isGOnCurve = isPointOnCurve()
-//    println("Is G on Curve? $isGOnCurve")
-
 
     //val privateKey = BigInteger(256, SecureRandom())
     val privateKey = BigInteger("165F1C58AFB81B9D767FCEF47CBCDFFD3298E0480575AC8A0CA9FEC04F600C26", 16)
