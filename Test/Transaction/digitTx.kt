@@ -1,6 +1,7 @@
 package LaeliaX.Transaction
 
-import LaeliaX.SecureKey.EllipticCurve
+
+import LaeliaX.SecureKey.ECDSA
 import LaeliaX.util.ShiftTo.DeciToHex
 import LaeliaX.util.ShiftTo.HexToByteArray
 import java.math.BigInteger
@@ -13,7 +14,7 @@ object digitTx {
 
     fun ScriptSigComponents(scriptContract: String, SignaturePoint: Pair<BigInteger, BigInteger>): String {
 
-        val Signature = EllipticCurve.ECDSA.toDERFormat(SignaturePoint) + "01"
+        val Signature = ECDSA.toDERFormat(SignaturePoint) + "01"
         val SignatureLength: String = Signature.HexToByteArray().size.DeciToHex()
 
         val RedeemLength: String = scriptContract.HexToByteArray().size.DeciToHex()

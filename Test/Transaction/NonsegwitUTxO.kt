@@ -17,8 +17,8 @@ import LaeliaX.MiniScript.Validator.getLockTime
 import LaeliaX.MiniScript.Validator.viewScript
 import LaeliaX.MiniScript.Validator.generateTransactionID
 
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignatures
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import LaeliaX.SecureKey.ECDSA.SignSignatures
+import LaeliaX.SecureKey.ECDSA.toDERFormat
 
 import LaeliaX.SecureKey.WIF.extractWIF
 import LaeliaX.util.Address.verify.isP2PKH
@@ -76,16 +76,16 @@ class NonsegwitUTxO(private val version: Int, private val privateKey: String) {
         val SignatureLength: String = Signature.HexToByteArray().size.DeciToHex()
 
         val RedeemLength: String = this.scriptCode.toString().HexToByteArray().size.DeciToHex()
-        val RedeemScript: String = this.scriptCode.toString()
+        val RedeemScriptCode: String = this.scriptCode.toString()
 
         val scriptSigLength: String = (
                 SignatureLength +
-                        Signature +
-                        RedeemLength +
-                        RedeemScript
-                ).HexToByteArray().size.DeciToHex()
+                Signature +
+                RedeemLength +
+                RedeemScriptCode
+        ).HexToByteArray().size.DeciToHex()
 
-        val result = scriptSigLength + SignatureLength + Signature + RedeemLength + RedeemScript
+        val result = scriptSigLength + SignatureLength + Signature + RedeemLength + RedeemScriptCode
         return result
     }
 

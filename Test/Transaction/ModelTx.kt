@@ -4,8 +4,8 @@ package LaeliaX.Transaction
 import LaeliaX.MiniScript.Validator
 import LaeliaX.MiniScript.Validator.getLockTime
 import LaeliaX.SecureKey.EllipticCurve
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.SignSignatures
-import LaeliaX.SecureKey.EllipticCurve.ECDSA.toDERFormat
+import LaeliaX.SecureKey.ECDSA.SignSignatures
+import LaeliaX.SecureKey.ECDSA.toDERFormat
 
 import LaeliaX.SecureKey.WIF.extractWIF
 

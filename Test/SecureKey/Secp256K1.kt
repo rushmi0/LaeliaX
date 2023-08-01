@@ -14,13 +14,10 @@ object Secp256K1 {
         BigInteger("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
     )
 
-    fun A(): BigInteger = this.A
+    data class CurveParams(val A: BigInteger, val B: BigInteger, val P: BigInteger, val N: BigInteger, val G: EllipticCurve.Point)
 
-    fun B(): BigInteger = this.B
+    fun getCurveParams(): CurveParams {
+        return CurveParams(A, B, P, N, G)
+    }
 
-    fun P(): BigInteger = this.P
-
-    fun N(): BigInteger = this.N
-
-    fun G(): EllipticCurve.Point = this.G
 }

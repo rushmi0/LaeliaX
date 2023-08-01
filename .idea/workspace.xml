@@ -5,57 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="Rename file">
-      <change afterPath="$PROJECT_DIR$/Test/SecureKey/Secp256K1.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/MiniScript/ScriptBuilder.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/MiniScript/ScriptBuilder.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/OP_.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/OP_.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/OperatorKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/OperatorKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ScriptBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ScriptBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ScriptBuilderKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ScriptBuilderKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/Validator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/MiniScript/ValidatorKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$ECDSA.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$ECDSA.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/Secp256K1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/Secp256K1.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/ModelTx.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/Transaction/digitTx.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$ECDSA.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$Point.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$Point.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$SchnorrSignature.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$SchnorrSignature.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve$SchnorrSignature.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurve.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurveKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/EllipticCurveKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/KeyFactoryKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/KeyFactoryKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/SecretWord.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/SecretWord.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/SecretWordKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/SecretWordKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/Virentkey.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/Virentkey.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/WIF.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/WIF.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/WIFKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/WIFKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/Secp256K1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/Secp256K1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/DigitTxKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/ModelSegWitTxKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/ModelSegWitTxKt.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/ModelTxKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/ModelTxKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NETWORKS.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NETWORKS.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NetworkKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NetworkKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOInput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$UTxOOutput.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$inputComponents$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO$generateUnsignedTransaction$outputComponents$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/NonsegwitUTxOKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/PSBTKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/PSBTKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/Transaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/Transaction.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/Transaction/digitTx.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Address$verify.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Address$verify.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Address.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Address.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/AddressKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/AddressKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Base58.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Base58.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Base58Kt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Base58Kt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32Kt$main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32Kt$main$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32Kt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Bech32Kt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ExecuteCMDKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ExecuteCMDKt.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Hashing.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Hashing.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Ripemd160.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/Ripemd160.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo$ByteArrayToBinary$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo$ByteArrayToBinary$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo$ByteArrayToHex$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo$ByteArrayToHex$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/util/ShiftTo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/LaeliaX/META-INF/LaeliaX.kotlin_module" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/LaeliaX/META-INF/LaeliaX.kotlin_module" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,9 +43,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "rushmi0"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="40f1c1c5-2a22-4975-967a-1e54a6da3a0b" />
+        <option name="url" value="https://github.com/rushmi0/LaeliaX.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2Rn6HVQve5ngLqhgHe8iUCqsi7c" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -86,27 +71,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.16.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.16.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/items/store/JVM/LaeliaX&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "javascript.nodejs.core.library.configured.version": "18.16.1",
+    "javascript.nodejs.core.library.typings.version": "18.16.1",
+    "last_opened_file_path": "/home/rushmi0/items/store/JVM/LaeliaX",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="Kotlin.EllipticCurveKt">
+}]]></component>
+  <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
     <configuration name="EllipticCurveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.EllipticCurveKt" />
       <module name="LaeliaX" />
@@ -144,9 +130,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.NonsegwitUTxOKt" />
         <item itemvalue="Kotlin.EllipticCurveKt" />
         <item itemvalue="Kotlin.KeyFactoryKt" />
-        <item itemvalue="Kotlin.NonsegwitUTxOKt" />
         <item itemvalue="Kotlin.ScriptBuilderKt" />
         <item itemvalue="Kotlin.PSBTKt" />
       </list>
@@ -178,7 +164,9 @@
       <workItem from="1688532428730" duration="15000" />
       <workItem from="1688979895394" duration="18000" />
       <workItem from="1688980524983" duration="6000" />
-      <workItem from="1690455831335" duration="5017000" />
+      <workItem from="1690455831335" duration="5795000" />
+      <workItem from="1690469825429" duration="7000" />
+      <workItem from="1690860474192" duration="2331000" />
     </task>
     <servers />
   </component>
@@ -186,6 +174,7 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
@@ -193,7 +182,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/Test/Transaction/digitTx.kt</url>
-          <line>29</line>
+          <line>30</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
