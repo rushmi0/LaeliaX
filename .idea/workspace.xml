@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="Fix: change form">
-      <change afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/ECDSA.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/SchnorrSignature.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/test/LaeliaX/LaeliaX/SecureKey/Secp256K1$CurveParams.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,12 +28,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "rushmi0"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;rushmi0&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -44,9 +45,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="2Rn6HVQve5ngLqhgHe8iUCqsi7c" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -65,7 +66,7 @@
     "git-widget-placeholder": "main",
     "javascript.nodejs.core.library.configured.version": "18.16.1",
     "javascript.nodejs.core.library.typings.version": "18.16.1",
-    "last_opened_file_path": "/home/rushmi0/items/store/JVM/LaeliaX",
+    "last_opened_file_path": "/home/rushmi0/items/Store/JVM/LaeliaX",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -76,7 +77,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Kotlin.NonsegwitUTxOKt">
+  <component name="RunManager" selected="Kotlin.EllipticCurveKt">
     <configuration name="EllipticCurveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.EllipticCurveKt" />
       <module name="LaeliaX" />
@@ -114,11 +115,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.NonsegwitUTxOKt" />
         <item itemvalue="Kotlin.EllipticCurveKt" />
-        <item itemvalue="Kotlin.KeyFactoryKt" />
-        <item itemvalue="Kotlin.ScriptBuilderKt" />
-        <item itemvalue="Kotlin.PSBTKt" />
       </list>
     </recent_temporary>
   </component>
@@ -150,7 +147,11 @@
       <workItem from="1688980524983" duration="6000" />
       <workItem from="1690455831335" duration="5795000" />
       <workItem from="1690469825429" duration="7000" />
-      <workItem from="1690860474192" duration="2634000" />
+      <workItem from="1690860474192" duration="4595000" />
+      <workItem from="1690987671107" duration="57000" />
+      <workItem from="1690987746724" duration="174000" />
+      <workItem from="1690987970595" duration="21000" />
+      <workItem from="1691910587719" duration="1831000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: change form">
       <option name="closed" value="true" />
@@ -168,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1690863107504</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fix: change form">
+      <option name="closed" value="true" />
+      <created>1690863117987</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1690863117987</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -178,27 +187,6 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Fix: change form" />
     <option name="LAST_COMMIT_MESSAGE" value="Fix: change form" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/Test/Transaction/digitTx.kt</url>
-          <line>30</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/Test/Transaction/PSBT.kt</url>
-          <line>5</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/Test/SecureKey/KeyFactory.kt</url>
-          <line>51</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
