@@ -15,20 +15,26 @@ import LaeliaX.util.ShiftTo.HexToByteArray
 import java.math.BigInteger
 
 
-/*
-* https://cryptobook.nakov.com/asymmetric-key-ciphers/elliptic-curve-cryptography-ecc
-* https://www.secg.org/sec2-v2.pdf
-* */
+    /*
+    * https://github.com/wobine/blackboard101/blob/master/EllipticCurvesPart5-TheMagic-SigningAndVerifying.py
+    * https://cryptobook.nakov.com/asymmetric-key-ciphers/elliptic-curve-cryptography-ecc
+    * https://www.secg.org/sec2-v2.pdf
+    *
+    * < Elliptic Curve Cryptography >
+    *  ในส่วนนี้เป็นการคำนวณ Public Key
+    * */
 
 object EllipticCurve {
 
     // * Parameters secp256k1
     private val curveDomain: Secp256K1.CurveParams = Secp256K1.getCurveParams()
-    val A: BigInteger = curveDomain.A
-    val B: BigInteger = curveDomain.B
-    val P: BigInteger = curveDomain.P
-    val N: BigInteger = curveDomain.N
-    val G: Point = curveDomain.G
+
+    private val A: BigInteger = curveDomain.A
+    private val B: BigInteger = curveDomain.B
+    private val P: BigInteger = curveDomain.P
+    private val N: BigInteger = curveDomain.N
+    private val G: Point = curveDomain.G
+
 
     // * จุดบนเส้นโค้งวงรี มีพิกัด x และ y
     data class Point(val x: BigInteger, val y: BigInteger)
@@ -52,34 +58,45 @@ object EllipticCurve {
     // ──────────────────────────────────────────────────────────────────────────────────────── \\
 
     /*
-    * < Elliptic Curve Cryptography >
-    * ในส่วนนี้เป็นการคำนวณ Public Key
-    *
-    * อ้างอิงจาก:
-    * https://github.com/wobine/blackboard101/blob/master/EllipticCurvesPart5-TheMagic-SigningAndVerifying.py
+    * Function สำหรับคำนวณ modular inverse
+    * https://www.dcode.fr/modular-inverse
     * */
-
-    // * https://www.dcode.fr/modular-inverse
     fun modinv(A: BigInteger, N: BigInteger = P) = A.modInverse(N)
 
 
+    // * Function สำหรับคำนวณค่าจุดหลังการคูณด้วย 2 บนเส้นโค้งวงรี
     fun doublePoint(point: Point): Point {
         val (x, y) = point
 
-        // ! (3 * x * x + A) % P
+        // * คำนวณค่า slope ด้วยสูตร (3 * x^2 + A) * (2 * y)^-1 mod P
         val slope = (BigInteger.valueOf(3) * x * x + A) % P
 
+        // *  คำนวณค่า lam_denom = (2 * y) mod P
         val lam_denom = (BigInteger.valueOf(2) * y) % P
 
+        // * คำนวณค่า lam = slope * (lam_denom)^-1 mod P
         val lam = (slope * modinv(lam_denom)) % P
 
+        // * คำนวณค่า xR = (lam^2 - 2 * x) mod P
         val xR = (lam * lam - BigInteger.valueOf(2) * x) % P
 
+
+        /*
+        * < จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี >
+        *  คำนวณค่า yR = (lam * (x - xR) - y) mod P เป็นส่วนที่คำนวณหาค่า y  ของจุดใหม่หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
+        *
+        *  lam   คือค่าเอียงของเส้นที่ผ่านจุดเดิมและจุดใหม่หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
+        *  x      คือค่า x ของจุดเดิม
+        *  xR    คือค่า x ของจุดใหม่หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
+        *  y     คือค่า y ของจุดเดิม
+        *
+        * นำค่าเหล่านี้มาใช้เพื่อหาค่า yR ใหม่ที่ถูกปรับเพิ่มหรือลดจากค่า y ของจุดเดิม โดยการคูณ lam กับผลต่างระหว่าง x และ xR
+        * */
         val yR = (lam * (x - xR) - y) % P
 
-        // * จุดใหม่ที่ได้หลังจากการคูณด้วย 2 บนเส้นโค้งวงรี
         return Point(xR, (yR + P) % P)
     }
+
 
     fun addPoint(point1: Point, point2: Point): Point {
         if (point1 == point2) {
