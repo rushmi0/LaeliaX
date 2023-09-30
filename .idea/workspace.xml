@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="สร้าง Public Key">
+    <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="config file">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/util/Bech32.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/util/Bech32.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,27 +67,27 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.16.1&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.16.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/items/Store/JVM/LaeliaX&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/items/Store/ReactApp/Demo/CamRent/Database/Storage.db&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Kotlin.EllipticCurveKt">
-    <configuration name="EllipticCurveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.EllipticCurveKt" />
+  <component name="RunManager" selected="Kotlin.Bech32Kt">
+    <configuration name="Bech32Kt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.util.Bech32Kt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KeyFactoryKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.KeyFactoryKt" />
+    <configuration name="EllipticCurveKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="LaeliaX.SecureKey.EllipticCurveKt" />
       <module name="LaeliaX" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -115,7 +116,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Kotlin.Bech32Kt" />
         <item itemvalue="Kotlin.EllipticCurveKt" />
+        <item itemvalue="Kotlin.NonsegwitUTxOKt" />
       </list>
     </recent_temporary>
   </component>
@@ -152,7 +155,17 @@
       <workItem from="1690987746724" duration="174000" />
       <workItem from="1690987970595" duration="21000" />
       <workItem from="1691910587719" duration="4805000" />
-      <workItem from="1691918229513" duration="324000" />
+      <workItem from="1691918229513" duration="1377000" />
+      <workItem from="1692000290064" duration="2066000" />
+      <workItem from="1692341965086" duration="5725000" />
+      <workItem from="1692436833167" duration="874000" />
+      <workItem from="1692496668968" duration="7040000" />
+      <workItem from="1692546728061" duration="649000" />
+      <workItem from="1692706066144" duration="34000" />
+      <workItem from="1693041352120" duration="4504000" />
+      <workItem from="1693124228360" duration="758000" />
+      <workItem from="1693185465866" duration="1564000" />
+      <workItem from="1694006330954" duration="993000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: change form">
       <option name="closed" value="true" />
@@ -194,7 +207,31 @@
       <option name="project" value="LOCAL" />
       <updated>1691918552620</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="สร้างลายเซ็นด้วย ECDSA">
+      <option name="closed" value="true" />
+      <created>1691918627850</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1691918627850</updated>
+    </task>
+    <task id="LOCAL-00007" summary="สร้างลายเซ็นด้วย SchnorrSignature">
+      <option name="closed" value="true" />
+      <created>1691918653355</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1691918653355</updated>
+    </task>
+    <task id="LOCAL-00008" summary="config file">
+      <option name="closed" value="true" />
+      <created>1691918701551</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1691918701551</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,9 +251,22 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Fix: change form" />
-    <MESSAGE value="config file" />
     <MESSAGE value="สร้าง Public Key" />
-    <option name="LAST_COMMIT_MESSAGE" value="สร้าง Public Key" />
+    <MESSAGE value="สร้างลายเซ็นด้วย ECDSA" />
+    <MESSAGE value="สร้างลายเซ็นด้วย SchnorrSignature" />
+    <MESSAGE value="config file" />
+    <option name="LAST_COMMIT_MESSAGE" value="config file" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
+          <line>100</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

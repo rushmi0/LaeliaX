@@ -287,9 +287,14 @@ object Bech32 {
 fun main() {
     val dataHex = "043a718774c572bd8a25adbeb1bfcd5c0256ae11cecf9f9c3f925d0e52beaf89"
     val dataBytes = dataHex.HexToByteArray()
+    println(dataBytes)
+
     val bech32Address = Bech32.segwitToBech32("bc", 0, dataBytes)
     println("Address: ${bech32Address}")
 
+
+    val newFormat = Bech32.segwitToBech32("tpub", 0, dataBytes)
+    println(newFormat)
 
     val address = bech32Address
 
