@@ -40,7 +40,7 @@ object SchnorrSignature {
     }
 
 
-    fun VerifySignature(publicKey: EllipticCurve.Point, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
+    fun VerifySignature(publicKey: PointField, message: BigInteger, signature: Pair<BigInteger, BigInteger>): Boolean {
         val (r, s) = signature
 
         val R = EllipticCurve.multiplyPoint(r) // Public key : R = r*G

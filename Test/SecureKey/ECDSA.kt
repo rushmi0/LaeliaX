@@ -26,7 +26,7 @@ object ECDSA {
         //val k = BigInteger("42854675228720239947134362876390869888553449708741430898694136287991817016610")
         val k = BigInteger(256, SecureRandom())
 
-        val point: EllipticCurve.Point = multiplyPoint(k)
+        val point: PointField = multiplyPoint(k)
         val kInv: BigInteger = modinv(k, N)
 
         val r: BigInteger = point.x % N
@@ -41,7 +41,7 @@ object ECDSA {
     }
 
     fun VerifySignature(
-        publicKeyPoint: EllipticCurve.Point,
+        publicKeyPoint: PointField,
         message: BigInteger,
         signature: Pair<BigInteger, BigInteger>
     ): Boolean {

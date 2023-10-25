@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02b13626-f368-4a93-8b97-c38ed72e5cb8" name="Changes" comment="config file">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/SecureKey/CurveDomain.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Test/SecureKey/PointField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/ECDSA.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test/util/Bech32.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/util/Bech32.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/SchnorrSignature.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/SecureKey/Secp256K1.kt" beforeDir="false" afterPath="$PROJECT_DIR$/Test/SecureKey/Secp256K1.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +27,7 @@
         <option value="JavaScript File" />
         <option value="package.json" />
         <option value="Kotlin Object" />
+        <option value="Kotlin Data Class" />
       </list>
     </option>
   </component>
@@ -65,20 +70,23 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.16.1&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.16.1&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.18.2&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.18.2&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/rushmi0/items/Store/ReactApp/Demo/CamRent/Database/Storage.db&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Kotlin.Bech32Kt">
+  <component name="RunManager">
     <configuration name="Bech32Kt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="LaeliaX.util.Bech32Kt" />
       <module name="LaeliaX" />
@@ -166,6 +174,8 @@
       <workItem from="1693124228360" duration="758000" />
       <workItem from="1693185465866" duration="1564000" />
       <workItem from="1694006330954" duration="993000" />
+      <workItem from="1698085623849" duration="1141000" />
+      <workItem from="1698215749621" duration="5198000" />
     </task>
     <task id="LOCAL-00001" summary="Fix: change form">
       <option name="closed" value="true" />
@@ -264,6 +274,16 @@
           <url>file://$PROJECT_DIR$/Test/Transaction/NonsegwitUTxO.kt</url>
           <line>100</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt</url>
+          <line>368</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/Test/SecureKey/EllipticCurve.kt</url>
+          <line>263</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

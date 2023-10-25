@@ -6,6 +6,8 @@ import LaeliaX.SecureKey.ECDSA.VerifySignature
 import LaeliaX.SecureKey.ECDSA.derRecovered
 import LaeliaX.SecureKey.ECDSA.toDERFormat
 import LaeliaX.SecureKey.EllipticCurve.compressed
+import LaeliaX.SecureKey.EllipticCurve.generateECDH
+
 import LaeliaX.SecureKey.EllipticCurve.getDecompress
 import LaeliaX.SecureKey.EllipticCurve.getPublicKey
 import LaeliaX.SecureKey.EllipticCurve.isPointOnCurve
@@ -13,6 +15,7 @@ import LaeliaX.SecureKey.EllipticCurve.multiplyPoint
 import LaeliaX.util.ShiftTo.ByteArrayToBigInteger
 import LaeliaX.util.ShiftTo.HexToByteArray
 import java.math.BigInteger
+import java.security.SecureRandom
 
 /*
 * https://github.com/wobine/blackboard101/blob/master/EllipticCurvesPart5-TheMagic-SigningAndVerifying.py
@@ -31,20 +34,18 @@ object EllipticCurve {
     private val A: BigInteger = curveDomain.A
     private val B: BigInteger = curveDomain.B
     private val P: BigInteger = curveDomain.P
-    private val N: BigInteger = curveDomain.N
-    private val G: Point = curveDomain.G
+    //private val N: BigInteger = curveDomain.N
+    private val G: PointField = curveDomain.G
 
 
-    // * จุดบนเส้นโค้งวงรี มีพิกัด x และ y
-    data class Point(val x: BigInteger, val y: BigInteger)
 
-    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
 
     /*
     * ตรวจสอบจุดบนโค้งวงรี Secp256k1
     * */
 
-    fun isPointOnCurve(point: Point?): Boolean {
+    fun isPointOnCurve(point: PointField?): Boolean {
         val (x, y) = point!!
 
         // * ตรวจสอบว่าจุดนั้นเป็นไปตามสมการเส้นโค้งวงรี หรือไม่: y^2 = x^3 + Ax + B (mod P)
@@ -54,7 +55,7 @@ object EllipticCurve {
         return leftSide == rightSide
     }
 
-    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
 
     /*
     * Function สำหรับคำนวณ modular inverse
@@ -64,7 +65,7 @@ object EllipticCurve {
 
 
     // * Function สำหรับคำนวณค่าจุดหลังการคูณด้วย 2 บนเส้นโค้งวงรี
-    fun doublePoint(point: Point): Point {
+    fun doublePoint(point: PointField): PointField {
         val (x, y) = point
 
         // * คำนวณค่า slope ด้วยสูตร (3 * x^2 + A) * (2 * y)^-1 mod P
@@ -93,11 +94,11 @@ object EllipticCurve {
         * */
         val yR = (lam * (x - xR) - y) % P
 
-        return Point(xR, (yR + P) % P)
+        return PointField(xR, (yR + P) % P)
     }
 
 
-    fun addPoint(point1: Point, point2: Point): Point {
+    fun addPoint(point1: PointField, point2: PointField): PointField {
         if (point1 == point2) {
             return doublePoint(point1)
         }
@@ -113,12 +114,12 @@ object EllipticCurve {
         // ! จัดการพิกัด Y ที่เป็นค่าลบ
         val yResult = if (y < A) y + P else y
 
-        return Point(x, yResult)
+        return PointField(x, yResult)
     }
 
-    fun multiplyPoint(k: BigInteger, point: Point? = null): Point {
+    fun multiplyPoint(k: BigInteger, point: PointField? = null): PointField {
         // * ตัวแปร current ถูกกำหนดให้เป็น point ที่รับเข้ามา หากไม่มีการระบุ point ค่าเริ่มต้นจะเป็นจุด G ที่ใช้ในการคูณเช่นกับ private key
-        val current: Point = point ?: G
+        val current: PointField = point ?: G
 
         // * แปลงจำนวนเต็ม k เป็นเลขฐานสอง
         val binary = k.toString(2)
@@ -140,14 +141,14 @@ object EllipticCurve {
     }
 
 
-    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
 
     /*
     * ปรับแต่ง Public key
     * */
 
     private fun fullPublicKeyPoint(k: BigInteger): String {
-        val point: Point = multiplyPoint(k)
+        val point: PointField = multiplyPoint(k)
         val publicKeyPoint = "04${point.x.toString(16)}${point.y.toString(16)}"
 
         // * ถ้าขนาด public key Hex น้องกว่า 130 จะต้องแทรก "0" เข้าไปอยู่ระหว่าง "04" และพิกัด X
@@ -174,7 +175,7 @@ object EllipticCurve {
         return groupkeys
     }
 
-    private fun decompressPublicKey(compressedPublicKey: String): Point? {
+    private fun decompressPublicKey(compressedPublicKey: String): PointField? {
         try {
             // แปลง compressed public key ในรูปแบบ Hex เป็น ByteArray
             val byteArray = compressedPublicKey.HexToByteArray()
@@ -203,8 +204,8 @@ object EllipticCurve {
             // คำนวณค่า y โดยแก้ไขเครื่องหมายตามผลลัพธ์ที่ได้จากการตรวจสอบ
             val computedY = if (isYSquareEven != isYEven) P.subtract(y) else y
 
-            // สร้าง Point จาก x และ y ที่ได้
-            return Point(xCoord, computedY)
+            // สร้าง PointField จาก x และ y ที่ได้
+            return PointField(xCoord, computedY)
         } catch (e: Exception) {
             println("Failed to decompress the public key: ${e.message}")
             return null
@@ -212,11 +213,62 @@ object EllipticCurve {
     }
 
 
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
+
+    /**
+     * < https://asecuritysite.com/encryption/js08 >
+     *
+     * Elliptic Curve Diffie Hellman (ECDH) is used to create a shared key. In this example we use secp256k1 (as used in Bitcoin) to generate points on the curve. Its format is:
+     *
+     * y2=x3+7
+     * with a prime number (p) of 0xFFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F
+     *
+     * and which is 2256−232−29−28−27−26−24−1
+     * All our operations will be (mod p)
+     *
+     * Bob will generate a public key and a private key by taking a point on the curve. The private key is a random number (dB
+     * ) and the Bob's public key (QB
+     * ) will be:
+     *
+     * QB=dB×G
+     *
+     * Alice will do the same and generate her public key (QA
+     * ) from her private key (dA
+     * ):
+     *
+     * QA=dA×G
+     *
+     * They then exchange their public keys. Alice will then use Bob's public key and her private key to calculate:
+     *
+     * SharekeyAlice=dA×QB
+     * This will be the same as:
+     *
+     * SharekeyAlice=dA×dB×G
+     * Bob will then use Alice's public key and his private key to determine:
+     *
+     * SharekeyBob =dB×QA
+     * This will be the same as:
+     *
+     * SharekeyBob=dB×dA×G
+     * And the keys will thus match.
+     * */
+    fun generateECDH(
+        publicKey: String,
+        privateKey: BigInteger
+    ): String {
+        val point: PointField? = publicKey.getDecompress()
+        val curvePoint = multiplyPoint(
+            privateKey,
+            point
+        )
+        return curvePoint.x.toString(16)
+    }
 
 
+    // �� ──────────────────────────────────────────────────────────────────────��
 
 
-    fun String.getDecompress(): Point? {
+    fun String.getDecompress(): PointField? {
         return decompressPublicKey(this)
     }
 
@@ -229,7 +281,7 @@ object EllipticCurve {
     }
 
 
-    // ──────────────────────────────────────────────────────────────────────────────────────── \\
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
 
 }
 
@@ -245,7 +297,7 @@ fun main() {
     println("Message: $message")
 
     val curvePoint = multiplyPoint(privateKey)
-    println("\nKey Point: $curvePoint")
+    println("\nKey PointField: $curvePoint")
 
     val publicKeyPoint = privateKey.getPublicKey()
     println("[U] Public Key: $publicKeyPoint")
@@ -284,5 +336,39 @@ fun main() {
     println(server!!)
 
 
+    // * ตัวอย่างการใช้งาน ECDH
+    val privateKeyA = BigInteger(256, SecureRandom())
+    val privateKeyB = BigInteger(256, SecureRandom())
 
+    val privateKeyC = BigInteger("97ddae0f3a25b92268175400149d65d6887b9cefaf28ea2c078e05cdc15a3c0a", 16)
+
+    val publicKeyA = privateKeyA.getPublicKey().compressed()
+    val publicKeyB = privateKeyB.getPublicKey().compressed()
+
+    val publicKeyC = privateKeyC.getPublicKey().compressed()
+
+    val sharedKeyA = generateECDH(
+        publicKeyB,
+        privateKeyA
+    )
+
+    val sharedKeyB = generateECDH(
+        publicKeyA,
+        privateKeyB
+    )
+
+    val sharedKeyC = generateECDH(
+        publicKeyA,
+        privateKeyC
+    )
+
+    println("\nShared Key A: $sharedKeyA")
+    println("Shared Key B: $sharedKeyB")
+    println("Shared Key C: $sharedKeyC")
+
+    if (sharedKeyA == sharedKeyB) {
+        println("Shared Keys Match")
+    } else {
+        println("Shared Keys Do Not Match")
+    }
 }
