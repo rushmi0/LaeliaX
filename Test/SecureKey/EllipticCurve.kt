@@ -34,9 +34,9 @@ object EllipticCurve {
     private val A: BigInteger = curveDomain.A
     private val B: BigInteger = curveDomain.B
     private val P: BigInteger = curveDomain.P
+
     //private val N: BigInteger = curveDomain.N
     private val G: PointField = curveDomain.G
-
 
 
     // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
@@ -149,16 +149,22 @@ object EllipticCurve {
 
     private fun fullPublicKeyPoint(k: BigInteger): String {
         val point: PointField = multiplyPoint(k)
-        val publicKeyPoint = "04${point.x.toString(16)}${point.y.toString(16)}"
+        val xHex = point.x.toString(16)
+        val yHex = point.y.toString(16)
 
-        // * ถ้าขนาด public key Hex น้องกว่า 130 จะต้องแทรก "0" เข้าไปอยู่ระหว่าง "04" และพิกัด X
-        if (publicKeyPoint.length < 130) {
+        // คำนวณขนาดของ public key Hex
+        val size = (xHex.length + yHex.length) / 2
 
-            // * "04" + "0" + X + Y
-            return publicKeyPoint.substring(0, 2) + "0" + publicKeyPoint.substring(2)
+        if (size < 64) {
+            // หากขนาดน้อยกว่า 64 ให้แทรก "0" ในตัวแปร xHex และ yHex
+            val padding = "0".repeat(64 - size)
+            return "04$padding$xHex$yHex"
         }
-        return publicKeyPoint
+
+        return "04$xHex$yHex"
     }
+
+
 
     private fun groupSelection(publicKey: String): String {
         if (publicKey.length == 130 && publicKey.substring(0, 2) != "04") {
@@ -218,54 +224,48 @@ object EllipticCurve {
     /**
      * < https://asecuritysite.com/encryption/js08 >
      *
-     * Elliptic Curve Diffie Hellman (ECDH) is used to create a shared key. In this example we use secp256k1 (as used in Bitcoin) to generate points on the curve. Its format is:
+     * ECDH (Elliptic Curve Diffie-Hellman) คือ การสร้าง Shared Key ระหว่าง 2 ฝ่าย โดยใช้ Public Key จากฝ่ายตรงข้าม กับ Private Key ของตัวเอง
+     * โดยที่ Shared Key ที่ได้จะเป็นค่าเดียวกันทั้งสองฝ่าย และสามารถนำไปใช้ในการเข้ารหัสแบบ Symmetric Key ได้
+     * ในการสร้าง Public Key จะใช้เส้นโค้ง secp256K1 เนื่องจากเป็นเส้นโค้งที่มีคุณสมบัติที่ดีในด้านต่างๆ ดังนี้
      *
-     * y2=x3+7
-     * with a prime number (p) of 0xFFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F
+     * 1. ความปลอดภัย: เพราะเส้นโค้งนี้มีความยาว 256 bits ซึ่งมีความยาวที่เพียงพอที่จะทนต่อการโจมตีด้วย Brute Force
+     * <p>
+     * 2. ความเร็วในการคำนวณ: เพราะเส้นโค้งนี้มีความยาวที่สั้น และมีคุณสมบัติในการคำนวณที่ดี ทำให้สามารถคำนวณได้เร็วกว่าเส้นโค้งอื่นๆ
+     * <p>
+     * 3. ขนาดเล็ก: เพราะเส้นโค้งนี้มีความยาวที่สั้น ทำให้ขนาดของ Public Key ที่ได้เล็กลง ซึ่งจะทำให้การสื่อสารผ่านเครือข่ายที่เป็นแบบ Real-Time ได้รวดเร็วขึ้น
+     * <p>
+     * 4. ประสิทธิภาพ: การลงนามด้วยเส้นโค้ง secp256K1 จะทำให้การลงนามเร็วขึ้น และมีขนาดของลายเซ็นที่เล็กลง ประหยัดทรัพยากรคอมพิวเตอร์
      *
-     * and which is 2256−232−29−28−27−26−24−1
-     * All our operations will be (mod p)
+     * < ขั้นตอนการสร้าง Shared Key >
+     *     1. ฝ่าย A สร้าง Public Key จาก Private Key ของตัวเอง และส่ง Public Key ไปให้ฝ่าย B
+     *     2. ฝ่าย B สร้าง Public Key จาก Private Key ของตัวเอง และส่ง Public Key ไปให้ฝ่าย A
      *
-     * Bob will generate a public key and a private key by taking a point on the curve. The private key is a random number (dB
-     * ) and the Bob's public key (QB
-     * ) will be:
-     *
-     * QB=dB×G
-     *
-     * Alice will do the same and generate her public key (QA
-     * ) from her private key (dA
-     * ):
-     *
-     * QA=dA×G
-     *
-     * They then exchange their public keys. Alice will then use Bob's public key and her private key to calculate:
-     *
-     * SharekeyAlice=dA×QB
-     * This will be the same as:
-     *
-     * SharekeyAlice=dA×dB×G
-     * Bob will then use Alice's public key and his private key to determine:
-     *
-     * SharekeyBob =dB×QA
-     * This will be the same as:
-     *
-     * SharekeyBob=dB×dA×G
-     * And the keys will thus match.
      * */
+
+    // ใช้สำหรับสร้าง Shared Key ระหว่าง 2 ฝ่าย เรียกว่า ECDH (Elliptic Curve Diffie-Hellman)
     fun generateECDH(
-        publicKey: String,
-        privateKey: BigInteger
+        publicKey: String, // Public Key ของฝ่ายตรงข้าม
+        privateKey: BigInteger // Private Key ของตัวเอง
     ): String {
-        val point: PointField? = publicKey.getDecompress()
+        // แปลง public key ให้อยู่ในรูปของ PointField นั้นก็คือ (x, y) ซึ่งเป็นพิกัดบนเส้นโค้งวงรี
+        val point: PointField = publicKey.getDecompress()
+            ?: // หากไม่สามารถแปลง public key ให้อยู่ในรูปของ PointField ได้
+            // คุณควรจัดการข้อผิดพลาดที่เกิดขึ้นในที่นี้
+            throw IllegalArgumentException("Invalid or unsupported public key format")
+
         val curvePoint = multiplyPoint(
-            privateKey,
+            privateKey, // นี่เป็นค่า Private Key ของตัวเอง
+
+            // นี่คือค่า x และ y ของจุดบนเส้นโค้งวงรีที่มาจาก public key ของฝ่ายตรงข้าม
             point
         )
+
         return curvePoint.x.toString(16)
     }
 
 
-    // �� ──────────────────────────────────────────────────────────────────────��
+
+    // �� ──────────────────────────────────────────────────────────────────────────────────────── �� \\
 
 
     fun String.getDecompress(): PointField? {
@@ -337,13 +337,19 @@ fun main() {
 
 
     // * ตัวอย่างการใช้งาน ECDH
-    val privateKeyA = BigInteger(256, SecureRandom())
-    val privateKeyB = BigInteger(256, SecureRandom())
+    val privateKeyA = BigInteger("79625421569768853913552101372473036721620627201397836988747447632291648962205")//BigInteger(256, SecureRandom())
+    val privateKeyB = BigInteger("67914844877053552625417144116446677376217396135678097020919636085202412362945")//BigInteger(256, SecureRandom())
+
+    println("\nPrivate Key A: $privateKeyA")
+    println("Private Key B: $privateKeyB")
 
     val privateKeyC = BigInteger("97ddae0f3a25b92268175400149d65d6887b9cefaf28ea2c078e05cdc15a3c0a", 16)
 
     val publicKeyA = privateKeyA.getPublicKey().compressed()
     val publicKeyB = privateKeyB.getPublicKey().compressed()
+
+    println("\nPublic Key A: $publicKeyA")
+    println("Public Key B: $publicKeyB")
 
     val publicKeyC = privateKeyC.getPublicKey().compressed()
 
@@ -364,7 +370,7 @@ fun main() {
 
     println("\nShared Key A: $sharedKeyA")
     println("Shared Key B: $sharedKeyB")
-    println("Shared Key C: $sharedKeyC")
+    //println("Shared Key C: $sharedKeyC")
 
     if (sharedKeyA == sharedKeyB) {
         println("Shared Keys Match")
