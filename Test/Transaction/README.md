@@ -99,4 +99,4 @@ UTxO จะมี Input เท่าไหร่ก็ได้ และมี 
 0100000001cb1a50fbd2437ac064bd7306984d5fe2154c929e75b1ca0ea25261ceb13950c9000000007247304402201d04db63b2dd5bad68846dedc7f782c35f348183c4e10b8b04adb9ad4f575bd402200d4fcf862ddcb7bba8b875faac74fada81bfcf351182fcba22cdab8ea103c0ee012903abb915b1752102aa36a1958e2fc5e5de75d05bcf6f3ccc0799be4905f4e418505dc6ab4422a8dbacfdffffff0200c00b5a16000000160014342329383239d2f100a425ecf5112142e85ad10e0088526a740000001976a914977ae6e32349b99b72196cb62b5ef37329ed81b488acabb91500
 ```
 
-สามารถนำธุรกรรมดิบเหล่านี้ไปเปิดดูได้ด้วยบิตคอยน์โหนดของเราเองได ้หรือเปิดดูด้วยเว็บ [explorer.btc.com](https://explorer.btc.com/tools/tx/decode)
+สามารถนำธุรกรรมดิบเหล่านี้ไปเปิดดูได้ด้วยบิตคอยน์โหนดของเราเองได ้หรือเปิดดูด้วยเว็บ [blockchain.com]([https://explorer.btc.com/tools/tx/decode](https://www.blockchain.com/explorer/assets/btc/decode-transaction))
